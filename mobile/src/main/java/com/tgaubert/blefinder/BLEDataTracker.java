@@ -64,21 +64,21 @@ public class BLEDataTracker implements BeaconConsumer {
 
     @Override
     public void onBeaconServiceConnect() {
-        Log.i(TAG, "Connected to service!");
+        Log.i(TAG, "Connected to service");
         beaconManager.setMonitorNotifier(new MonitorNotifier() {
             @Override
             public void didEnterRegion(Region region) {
-                Log.i(TAG, "I just saw an beacon for the first time!");
+                Log.i(TAG, "Found a beacon for the first time");
             }
 
             @Override
             public void didExitRegion(Region region) {
-                Log.i(TAG, "I no longer see an beacon");
+                Log.i(TAG, "No beacons within range");
             }
 
             @Override
             public void didDetermineStateForRegion(int state, Region region) {
-                Log.i(TAG, "I have just switched from seeing/not seeing beacons: " + state);
+                Log.i(TAG, "Switched from seeing/not seeing beacons: " + state);
             }
         });
 
@@ -88,15 +88,15 @@ public class BLEDataTracker implements BeaconConsumer {
                 if (beacons.size() > 0) {
                     Beacon b = beacons.iterator().next();
                     Log.i(TAG, b.getBluetoothName());
-                    Log.i(TAG, "The first beacon I see is about " + b.getDistance() + " meters away.");
+                    Log.i(TAG, "Closest beacon is about " + b.getDistance() + " meters away.");
                 }
             }
         });
 
         try {
             if(isTracking) {
-                beaconManager.startMonitoringBeaconsInRegion(new Region("myMonitoringUniqueId", null, null, null));
-                beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
+                beaconManager.startMonitoringBeaconsInRegion(new Region("BLEFinder", null, null, null));
+                beaconManager.startRangingBeaconsInRegion(new Region("BLEFinder", null, null, null));
             }
         } catch (RemoteException e) {
             e.printStackTrace();
