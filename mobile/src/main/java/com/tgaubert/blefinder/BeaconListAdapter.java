@@ -1,9 +1,14 @@
 package com.tgaubert.blefinder;
 
+import android.app.Dialog;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import org.altbeacon.beacon.Beacon;
@@ -14,7 +19,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
 
     private ArrayList<Beacon> beacons;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView rowTitle, rowSubtitle;
 
@@ -22,6 +27,25 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
             super(v);
             rowTitle = (TextView) v.findViewById(R.id.rowTitle);
             rowSubtitle = (TextView) v.findViewById(R.id.rowSubtitle);
+
+            v.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Beacon selected = beacons.get(getPosition());
+
+            final Dialog dialog = new Dialog(view.getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.beacon_info_dialog);
+            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+            params.width = WindowManager.LayoutParams.MATCH_PARENT;
+            dialog.getWindow().setAttributes(params);
+
+            ((TextView)dialog.findViewById(R.id.dialogTitle)).setText(selected.getBluetoothName());
+            ((TextView)dialog.findViewById(R.id.dialogText)).setText(selected.toString());
+
+            dialog.show();
         }
     }
 
