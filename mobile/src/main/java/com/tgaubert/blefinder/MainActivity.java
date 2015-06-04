@@ -18,9 +18,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
         bleDataTracker = new BLEDataTracker(this);
+
+        setContentView(R.layout.activity_main);
     }
 
     @Override
@@ -48,7 +48,9 @@ public class MainActivity extends AppCompatActivity {
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
-            ((TextView)dialog.findViewById(R.id.appVersion)).setText(pInfo.versionName);
+
+            if(pInfo != null)
+                ((TextView)dialog.findViewById(R.id.appVersion)).setText(pInfo.versionName);
 
             return true;
         }

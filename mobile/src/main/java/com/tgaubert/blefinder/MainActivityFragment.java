@@ -5,14 +5,24 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.altbeacon.beacon.Beacon;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class MainActivityFragment extends Fragment {
 
     private View rootView;
     private FloatingActionButton floatingActionButton;
+    private RecyclerView recyclerView;
+    private BeaconListAdapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -34,6 +44,16 @@ public class MainActivityFragment extends Fragment {
                 }
             }
         });
+
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.beaconList);
+
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new BeaconListAdapter(new ArrayList<Beacon>());
+        recyclerView.setAdapter(adapter);
+
+        ((MainActivity) getActivity()).getBleDataTracker().setListAdapter(adapter);
 
         return rootView;
     }

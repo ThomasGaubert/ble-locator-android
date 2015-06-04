@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.RemoteException;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import org.altbeacon.beacon.Beacon;
@@ -14,12 +15,14 @@ import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class BLEDataTracker implements BeaconConsumer {
 
     private BeaconManager beaconManager;
     private Collection<Beacon> beacons;
+    private BeaconListAdapter listAdapter;
     private boolean isTracking = false;
     private Context context;
 
@@ -62,6 +65,10 @@ public class BLEDataTracker implements BeaconConsumer {
         return isTracking;
     }
 
+    public void setListAdapter(BeaconListAdapter listAdapter) {
+        this.listAdapter = listAdapter;
+    }
+
     @Override
     public void onBeaconServiceConnect() {
         Log.i(TAG, "Connected to service");
@@ -84,12 +91,14 @@ public class BLEDataTracker implements BeaconConsumer {
 
         beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
-            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-                if (beacons.size() > 0) {
-                    Beacon b = beacons.iterator().next();
-                    Log.i(TAG, b.getBluetoothName());
-                    Log.i(TAG, "Closest beacon is about " + b.getDistance() + " meters away.");
-                }
+            public void didRangeBeaconsInRegion(final Collection<Beacon> beacons, Region region) {
+                setBeacons(beacons);
+                ((MainActivity) context).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listAdapter.set(new ArrayList<>(beacons));
+                    }
+                });
             }
         });
 
