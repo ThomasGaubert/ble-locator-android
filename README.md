@@ -1,4 +1,4 @@
 ble-locator-android
 ===================
 
-Android app to locate nearby BLE beacons.
+Android application to locate nearby BLE beacons.
