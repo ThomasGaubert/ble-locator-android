@@ -41,8 +41,13 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
         public void onClick(final View view) {
             final Beacon selected = beacons.get(getPosition());
 
+            Beacon b = beacons.get(getPosition());
+            String beaconName = b.getBluetoothName();
+            if(!BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
+                beaconName = BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName();
+
             new BottomSheet.Builder((MainActivity) view.getContext())
-                    .title(selected.getBluetoothName())
+                    .title(beaconName)
                     .sheet(R.menu.beacon_sheet)
                     .listener(new DialogInterface.OnClickListener() {
                 @Override
@@ -56,7 +61,12 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                             params.width = WindowManager.LayoutParams.MATCH_PARENT;
                             infoDialog.getWindow().setAttributes(params);
 
-                            ((TextView)infoDialog.findViewById(R.id.dialogTitle)).setText(selected.getBluetoothName());
+                            Beacon b = beacons.get(getPosition());
+                            String beaconName = b.getBluetoothName();
+                            if(!BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
+                                beaconName = BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName();
+
+                            ((TextView)infoDialog.findViewById(R.id.dialogTitle)).setText(beaconName);
                             ((TextView)infoDialog.findViewById(R.id.dialogText)).setText(BeaconIO.getSeenBeacons().get(selected.getBluetoothAddress()).getJsonObject().toString());
                             infoDialog.findViewById(R.id.dialogOk).setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -76,6 +86,15 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
 
                             final EditText name = ((EditText) renameDialog.findViewById(R.id.dialogEditText));
                             name.setHint(selected.getBluetoothName());
+
+                            name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                @Override
+                                public void onFocusChange(View v, boolean hasFocus) {
+                                    if (hasFocus) {
+                                        renameDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                                    }
+                                }
+                            });
 
                             String currentName = BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).getUserName();
                             if(currentName.contains("BLEFinder\u2063"))
