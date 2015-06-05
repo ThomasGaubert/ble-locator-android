@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@SuppressWarnings("ALL")
 public class BeaconIO {
 
     private static HashMap<String, SeenBeacon> seenBeacons = new HashMap<>();
@@ -58,6 +57,7 @@ public class BeaconIO {
                     }
                 } else {
                     try {
+                        //noinspection ResultOfMethodCallIgnored
                         file.createNewFile();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -81,6 +81,7 @@ public class BeaconIO {
                     }
 
                     try {
+                        //noinspection ResultOfMethodCallIgnored
                         file.createNewFile();
                         FileWriter fileWriter = new FileWriter(file);
                         fileWriter.write(beacons.toString());
