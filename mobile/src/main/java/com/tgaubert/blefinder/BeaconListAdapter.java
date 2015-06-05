@@ -44,6 +44,12 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
 
             ((TextView)dialog.findViewById(R.id.dialogTitle)).setText(selected.getBluetoothName());
             ((TextView)dialog.findViewById(R.id.dialogText)).setText(selected.toString());
+            dialog.findViewById(R.id.dialogOk).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
 
             dialog.show();
         }
