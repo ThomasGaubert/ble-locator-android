@@ -1,9 +1,12 @@
 package com.tgaubert.blefinder;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +41,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+        if(id == R.id.action_reset) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Reset Beacons");
+            builder.setMessage("Are you sure you want to reset beacon data?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    BeaconIO.getSeenBeacons().clear();
+                    Snackbar.make(findViewById(R.id.floating_btn), "Beacon data reset.", Snackbar.LENGTH_LONG).show();
+                }
+            });
+            builder.setNegativeButton("No", null);
+            builder.show();
+        }
 
         if (id == R.id.action_about) {
             final Dialog dialog = new Dialog(this);
