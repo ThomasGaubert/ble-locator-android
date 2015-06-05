@@ -100,4 +100,12 @@ public class BeaconIO {
     public static HashMap<String, SeenBeacon> getSeenBeacons() {
         return seenBeacons;
     }
+
+    public static SeenBeacon getSeenBeacon(String key) {
+        return seenBeacons.get(key);
+    }
+
+    public static SeenBeacon putSeenBeacon(String key, SeenBeacon value) {
+        return seenBeacons.put(key, value);
+    }
 }

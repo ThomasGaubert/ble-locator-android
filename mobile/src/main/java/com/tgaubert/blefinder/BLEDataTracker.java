@@ -53,7 +53,7 @@ public class BLEDataTracker implements BeaconConsumer {
         this.isTracking = isTracking;
 
         try {
-            if(isTracking) {
+            if (isTracking) {
                 beaconManager.startMonitoringBeaconsInRegion(new Region("BLEFinder", null, null, null));
                 beaconManager.startRangingBeaconsInRegion(new Region("BLEFinder", null, null, null));
             } else {
@@ -99,15 +99,22 @@ public class BLEDataTracker implements BeaconConsumer {
             @Override
             public void didRangeBeaconsInRegion(final Collection<Beacon> beacons, Region region) {
                 setBeacons(beacons);
+                final ArrayList<Beacon> visibleBeacons = new ArrayList<>();
                 ((MainActivity) context).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listAdapter.set(new ArrayList<>(beacons));
+                        for (Beacon b : beacons) {
+                            SeenBeacon seenBeacon = BeaconIO.getSeenBeacon(b.getBluetoothAddress());
+                            if(seenBeacon != null && !seenBeacon.isIgnore())
+                                visibleBeacons.add(b);
+                        }
+
+                        listAdapter.set(visibleBeacons);
                     }
                 });
 
-                for(Beacon b : beacons) {
-                    if(BeaconIO.getSeenBeacons().containsKey(b.getBluetoothAddress())) {
+                for (Beacon b : beacons) {
+                    if (BeaconIO.getSeenBeacons().containsKey(b.getBluetoothAddress())) {
                         Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before.");
                     } else {
                         Log.i(TAG, "Just saw a beacon " + b.getBluetoothAddress() + " for the first time.");
@@ -118,7 +125,7 @@ public class BLEDataTracker implements BeaconConsumer {
         });
 
         try {
-            if(isTracking) {
+            if (isTracking) {
                 beaconManager.startMonitoringBeaconsInRegion(new Region("BLEFinder", null, null, null));
                 beaconManager.startRangingBeaconsInRegion(new Region("BLEFinder", null, null, null));
             }

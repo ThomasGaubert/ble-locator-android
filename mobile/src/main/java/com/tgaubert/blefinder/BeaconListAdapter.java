@@ -2,8 +2,7 @@ package com.tgaubert.blefinder;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,6 +29,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
 
         public ViewHolder(View v) {
             super(v);
+
             rowTitle = (TextView) v.findViewById(R.id.rowTitle);
             rowSubtitle = (TextView) v.findViewById(R.id.rowSubtitle);
 
@@ -77,8 +77,14 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                         case R.id.ignore:
                             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                             builder.setTitle("Ignore Beacon");
-                            builder.setMessage("Are you sure you want to permanently ignore this beacon?");
-                            builder.setPositiveButton("Yes", null);
+                            builder.setMessage("Are you sure you want to ignore this beacon?");
+                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    BeaconIO.getSeenBeacons().get(selected.getBluetoothAddress()).setIgnore(true);
+                                    Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "Ignoring " + selected.getBluetoothName() + ".", Snackbar.LENGTH_LONG).show();
+                                }
+                            });
                             builder.setNegativeButton("No", null);
                             builder.show();
                             break;
