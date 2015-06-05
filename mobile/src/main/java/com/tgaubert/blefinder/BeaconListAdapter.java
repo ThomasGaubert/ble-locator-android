@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +51,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                         case R.id.info:
                             final Dialog infoDialog = new Dialog(view.getContext());
                             infoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            infoDialog.setContentView(R.layout.beacon_info_dialog);
+                            infoDialog.setContentView(R.layout.dialog_beacon_info);
                             WindowManager.LayoutParams params = infoDialog.getWindow().getAttributes();
                             params.width = WindowManager.LayoutParams.MATCH_PARENT;
                             infoDialog.getWindow().setAttributes(params);
@@ -66,13 +67,49 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                             infoDialog.show();
                             break;
                         case R.id.rename:
-                            Toast.makeText(view.getContext(), "To be implemented...", Toast.LENGTH_SHORT).show();
+                            final Dialog renameDialog = new Dialog(view.getContext());
+                            renameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            renameDialog.setContentView(R.layout.dialog_beacon_rename);
+                            WindowManager.LayoutParams renameParams = renameDialog.getWindow().getAttributes();
+                            renameParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+                            renameDialog.getWindow().setAttributes(renameParams);
+
+                            final EditText name = ((EditText) renameDialog.findViewById(R.id.dialogEditText));
+                            name.setHint(selected.getBluetoothName());
+
+                            String currentName = BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).getUserName();
+                            if(currentName.contains("BLEFinder\u2063"))
+                                name.setText("");
+                            else
+                                name.setText(currentName);
+
+                            name.setSelection(name.getText().length());
+
+                            renameDialog.findViewById(R.id.dialogCancel).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    renameDialog.dismiss();
+                                }
+                            });
+
+                            renameDialog.findViewById(R.id.dialogOk).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(name.getText().toString().equals("")) {
+                                        name.setText("BLEFinder\u2063");
+                                    }
+
+                                    BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).setUserName(name.getText().toString());
+                                    renameDialog.dismiss();
+                                }
+                            });
+                            renameDialog.show();
                             break;
                         case R.id.color:
-                            Toast.makeText(view.getContext(), "To be implemented...", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "To be implemented...", Snackbar.LENGTH_LONG).show();
                             break;
                         case R.id.notify:
-                            Toast.makeText(view.getContext(), "To be implemented...", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "To be implemented...", Snackbar.LENGTH_LONG).show();
                             break;
                         case R.id.ignore:
                             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
@@ -122,8 +159,12 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.rowTitle.setText(beacons.get(position).getBluetoothName());
-        holder.rowSubtitle.setText(beacons.get(position).getDistance() + " meters away");
+        Beacon b = beacons.get(position);
+        if(BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
+            holder.rowTitle.setText(b.getBluetoothName());
+        else
+            holder.rowTitle.setText(BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName());
+        holder.rowSubtitle.setText(b.getDistance() + " meters away");
     }
 
     @Override

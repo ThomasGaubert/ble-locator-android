@@ -15,8 +15,8 @@ public class SeenBeacon {
         this.uuid = uuid;
         this.btName = btName;
 
-        userName = "BLEFinder\\u00A0";
-        color = "#FFFFFF\\u00A0";
+        userName = "BLEFinder\u2063";
+        color = "#FFFFFF\u2063";
         notify = false;
         distance = 0;
         ignore = false;
