@@ -1,8 +1,10 @@
 package com.tgaubert.blefinder;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.cocosw.bottomsheet.BottomSheet;
 
 import org.altbeacon.beacon.Beacon;
 
@@ -32,26 +37,54 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
         }
 
         @Override
-        public void onClick(View view) {
-            Beacon selected = beacons.get(getPosition());
+        public void onClick(final View view) {
+            final Beacon selected = beacons.get(getPosition());
 
-            final Dialog dialog = new Dialog(view.getContext());
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.beacon_info_dialog);
-            WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-            params.width = WindowManager.LayoutParams.MATCH_PARENT;
-            dialog.getWindow().setAttributes(params);
-
-            ((TextView)dialog.findViewById(R.id.dialogTitle)).setText(selected.getBluetoothName());
-            ((TextView)dialog.findViewById(R.id.dialogText)).setText(selected.toString());
-            dialog.findViewById(R.id.dialogOk).setOnClickListener(new View.OnClickListener() {
+            new BottomSheet.Builder((MainActivity) view.getContext())
+                    .title(selected.getBluetoothName())
+                    .sheet(R.menu.beacon_sheet)
+                    .listener(new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
+                public void onClick(DialogInterface dialog, int which) {
+                    switch(which) {
+                        case R.id.info:
+                            final Dialog infoDialog = new Dialog(view.getContext());
+                            infoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            infoDialog.setContentView(R.layout.beacon_info_dialog);
+                            WindowManager.LayoutParams params = infoDialog.getWindow().getAttributes();
+                            params.width = WindowManager.LayoutParams.MATCH_PARENT;
+                            infoDialog.getWindow().setAttributes(params);
 
-            dialog.show();
+                            ((TextView)infoDialog.findViewById(R.id.dialogTitle)).setText(selected.getBluetoothName());
+                            ((TextView)infoDialog.findViewById(R.id.dialogText)).setText(selected.toString());
+                            infoDialog.findViewById(R.id.dialogOk).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    infoDialog.dismiss();
+                                }
+                            });
+                            infoDialog.show();
+                            break;
+                        case R.id.rename:
+                            Toast.makeText(view.getContext(), "To be implemented...", Toast.LENGTH_SHORT).show();
+                            break;
+                        case R.id.color:
+                            Toast.makeText(view.getContext(), "To be implemented...", Toast.LENGTH_SHORT).show();
+                            break;
+                        case R.id.notify:
+                            Toast.makeText(view.getContext(), "To be implemented...", Toast.LENGTH_SHORT).show();
+                            break;
+                        case R.id.ignore:
+                            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                            builder.setTitle("Ignore Beacon");
+                            builder.setMessage("Are you sure you want to permanently ignore this beacon?");
+                            builder.setPositiveButton("Yes", null);
+                            builder.setNegativeButton("No", null);
+                            builder.show();
+                            break;
+                    }
+                }
+            }).show();
         }
     }
 

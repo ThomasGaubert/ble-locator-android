@@ -11,6 +11,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
 
     private BLEDataTracker bleDataTracker;
@@ -21,6 +24,12 @@ public class MainActivity extends AppCompatActivity {
         bleDataTracker = new BLEDataTracker(this);
 
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        bleDataTracker.save();
     }
 
     @Override

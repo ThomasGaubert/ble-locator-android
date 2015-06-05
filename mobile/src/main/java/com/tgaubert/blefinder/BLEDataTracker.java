@@ -17,24 +17,49 @@ import org.altbeacon.beacon.Region;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BLEDataTracker implements BeaconConsumer {
 
     private BeaconManager beaconManager;
     private Collection<Beacon> beacons;
+    private HashMap<String, SeenBeacon> seenBeacons;
     private BeaconListAdapter listAdapter;
     private boolean isTracking = false;
     private Context context;
 
     private String TAG = "BLEDataTracker";
 
-    public BLEDataTracker(Context context) {
+    public BLEDataTracker(final Context context) {
         this.context = context;
+        seenBeacons = new HashMap<>();
+
+        new Thread(new Runnable() {
+            public void run() {
+                for(SeenBeacon b : BeaconIO.loadBeacons(context)) {
+                    seenBeacons.put(b.getUuid(), b);
+                }
+            }
+        }).start();
 
         beaconManager = BeaconManager.getInstanceForApplication(context);
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         beaconManager.bind(this);
+    }
+
+    public void save() {
+        new Thread(new Runnable() {
+            public void run() {
+                ArrayList<SeenBeacon> b = new ArrayList<>();
+                for(Map.Entry<String, SeenBeacon> entry : seenBeacons.entrySet()) {
+                    b.add(new SeenBeacon(entry.getKey(), entry.getValue().getJsonObject()));
+                }
+
+                BeaconIO.saveBeacons(b, context);
+            }
+        }).start();
     }
 
     public void setBeacons(Collection<Beacon> beacons) {
@@ -55,6 +80,8 @@ public class BLEDataTracker implements BeaconConsumer {
             } else {
                 beaconManager.stopMonitoringBeaconsInRegion(new Region("BLEFinder", null, null, null));
                 beaconManager.stopRangingBeaconsInRegion(new Region("BLEFinder", null, null, null));
+
+                save();
             }
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -99,6 +126,15 @@ public class BLEDataTracker implements BeaconConsumer {
                         listAdapter.set(new ArrayList<>(beacons));
                     }
                 });
+
+                for(Beacon b : beacons) {
+                    if(seenBeacons.containsKey(b.getBluetoothAddress())) {
+                        Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before.");
+                    } else {
+                        Log.i(TAG, "Just saw a beacon " + b.getBluetoothAddress() + " for the first time.");
+                        seenBeacons.put(b.getBluetoothAddress(), new SeenBeacon(b.getBluetoothAddress(), b.getBluetoothName()));
+                    }
+                }
             }
         });
 

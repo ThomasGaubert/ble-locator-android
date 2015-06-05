@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/info" android:title="Info" android:icon="@drawable/information"/>
+    <item android:id="@+id/rename" android:title="Rename" android:icon="@drawable/rename"/>
+    <item android:id="@+id/color" android:title="Color" android:icon="@drawable/color"/>
+    <item android:id="@+id/notify" android:title="Notify" android:icon="@drawable/notify"/>
+    <item android:id="@+id/ignore" android:title="Ignore" android:icon="@drawable/ignore"/>
+</menu>
