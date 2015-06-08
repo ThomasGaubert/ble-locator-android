@@ -117,6 +117,10 @@ public class BLEDataTracker implements BeaconConsumer {
                     if (BeaconIO.getSeenBeacons().containsKey(b.getBluetoothAddress())) {
                         Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before.");
                         SeenBeacon seenBeacon = BeaconIO.getSeenBeacon(b.getBluetoothAddress());
+                        int notificationId = Integer.parseInt(b.getBluetoothAddress().replace(":", "").substring(0, 5), 16);
+                        NotificationManager notifyMgr = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
+                        boolean notified = false;
+
                         if(!seenBeacon.isIgnore() && Double.parseDouble(seenBeacon.getDistance()) >= b.getDistance()) {
                             String savedName = seenBeacon.getUserName();
                             if(savedName.contains("BLEFinder\u2063"))
@@ -129,10 +133,12 @@ public class BLEDataTracker implements BeaconConsumer {
                                             .setContentTitle("Beacon Alert")
                                             .setContentText(savedName + " is within " + seenBeacon.getDistance() + "m.");
 
-                            int mNotificationId = 1;
-                            NotificationManager mNotifyMgr =
-                                    (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
-                            mNotifyMgr.notify(mNotificationId, mBuilder.build());
+                            notifyMgr.notify(notificationId, mBuilder.build());
+                            notified = true;
+                        }
+
+                        if(!notified) {
+                            notifyMgr.cancel(notificationId);
                         }
                     } else {
                         Log.i(TAG, "Just saw a beacon " + b.getBluetoothAddress() + " for the first time.");
