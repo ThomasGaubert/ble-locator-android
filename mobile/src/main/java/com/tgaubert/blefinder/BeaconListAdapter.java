@@ -145,7 +145,44 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                     cpd.show();
                                     break;
                                 case R.id.notify:
-                                    Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "To be implemented...", Snackbar.LENGTH_LONG).show();
+                                    final Dialog notifyDialog = new Dialog(view.getContext());
+                                    notifyDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    notifyDialog.setContentView(R.layout.dialog_beacon_notify);
+                                    WindowManager.LayoutParams notifyParams = notifyDialog.getWindow().getAttributes();
+                                    notifyParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+                                    notifyDialog.getWindow().setAttributes(notifyParams);
+
+                                    final EditText distEditText = ((EditText) notifyDialog.findViewById(R.id.notifyDistance));
+                                    distEditText.setText(BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).getDistance());
+                                    distEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                        @Override
+                                        public void onFocusChange(View v, boolean hasFocus) {
+                                            if (hasFocus) {
+                                                notifyDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                                            }
+                                        }
+                                    });
+                                    distEditText.setSelection(distEditText.getText().length());
+
+                                    notifyDialog.findViewById(R.id.dialogCancel).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            notifyDialog.dismiss();
+                                        }
+                                    });
+
+                                    notifyDialog.findViewById(R.id.dialogOk).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            String distance = distEditText.getText().toString();
+                                            if(distance.trim().equals(""))
+                                                distance = "0";
+                                            BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).setDistance(distance);
+                                            notifyDialog.dismiss();
+                                        }
+                                    });
+
+                                    notifyDialog.show();
                                     break;
                                 case R.id.ignore:
                                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());

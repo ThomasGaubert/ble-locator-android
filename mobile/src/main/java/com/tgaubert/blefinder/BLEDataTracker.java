@@ -1,10 +1,12 @@
 package com.tgaubert.blefinder;
 
+import android.app.NotificationManager;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.RemoteException;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import org.altbeacon.beacon.Beacon;
@@ -17,8 +19,6 @@ import org.altbeacon.beacon.Region;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BLEDataTracker implements BeaconConsumer {
 
@@ -116,6 +116,19 @@ public class BLEDataTracker implements BeaconConsumer {
                 for (Beacon b : beacons) {
                     if (BeaconIO.getSeenBeacons().containsKey(b.getBluetoothAddress())) {
                         Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before.");
+                        if(Double.parseDouble(BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getDistance()) >= b.getDistance()) {
+                            NotificationCompat.Builder mBuilder =
+                                    new NotificationCompat.Builder(getApplicationContext())
+                                            .setSmallIcon(R.mipmap.ic_launcher)
+                                            .setColor(context.getResources().getColor(R.color.primary))
+                                            .setContentTitle("Beacon Alert")
+                                            .setContentText(b.getBluetoothName() + " is within range!");
+
+                            int mNotificationId = 1;
+                            NotificationManager mNotifyMgr =
+                                    (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
+                            mNotifyMgr.notify(mNotificationId, mBuilder.build());
+                        }
                     } else {
                         Log.i(TAG, "Just saw a beacon " + b.getBluetoothAddress() + " for the first time.");
                         BeaconIO.getSeenBeacons().put(b.getBluetoothAddress(), new SeenBeacon(b.getBluetoothAddress(), b.getBluetoothName()));

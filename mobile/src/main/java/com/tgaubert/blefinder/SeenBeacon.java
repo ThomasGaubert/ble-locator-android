@@ -7,9 +7,9 @@ import org.json.JSONObject;
 public class SeenBeacon {
 
     private String uuid;
-    private String btName, userName;
+    private String btName, userName, distance;
     private boolean notify, ignore;
-    private int distance, color;
+    private int color;
 
     public SeenBeacon(String uuid, String btName) {
         this.uuid = uuid;
@@ -18,7 +18,7 @@ public class SeenBeacon {
         userName = "BLEFinder\u2063";
         color = 0;
         notify = false;
-        distance = 0;
+        distance = "0";
         ignore = false;
     }
 
@@ -31,7 +31,7 @@ public class SeenBeacon {
             color = json.getInt("color");
 
             notify = json.getBoolean("notify");
-            distance = json.getInt("distance");
+            distance = json.getString("distance");
             ignore = json.getBoolean("ignore");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -95,11 +95,11 @@ public class SeenBeacon {
         this.ignore = ignore;
     }
 
-    public int getDistance() {
+    public String getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(String distance) {
         this.distance = distance;
     }
 }

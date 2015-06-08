@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/dialogTitle"
+        android:text="Beacon Alert"
+        android:layout_marginRight="24dp"
+        android:layout_marginLeft="24dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Get notified if this beacon is within a distance."
+        android:id="@+id/dialogSubtitle"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/dialogTitle"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/distance"
+        android:layout_below="@+id/dialogSubtitle"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp">
+
+        <EditText
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/notifyDistance"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="meters"
+            android:id="@+id/notifyUnits" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttons"
+        android:gravity="end"
+        android:layout_below="@+id/distance"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp">
+
+        <Button
+            android:id="@+id/dialogCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:background="?android:attr/selectableItemBackground"
+            android:textSize="14sp"
+            android:textColor="?colorPrimary" />
+
+        <Button
+            android:id="@+id/dialogOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:background="?android:attr/selectableItemBackground"
+            android:textSize="14sp"
+            android:textColor="?colorPrimary" />
+
+    </LinearLayout>
+
+</RelativeLayout>
