@@ -130,6 +130,7 @@ public class BLEDataTracker implements BeaconConsumer {
                                     new NotificationCompat.Builder(getApplicationContext())
                                             .setSmallIcon(R.mipmap.ic_launcher)
                                             .setColor(context.getResources().getColor(R.color.primary))
+                                            .setGroup("BLE_FINDER_ALERT")
                                             .setContentTitle("Beacon Alert")
                                             .setContentText(savedName + " is within " + seenBeacon.getDistance() + "m.");
 
