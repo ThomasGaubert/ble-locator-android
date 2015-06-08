@@ -105,7 +105,7 @@ public class BLEDataTracker implements BeaconConsumer {
                     public void run() {
                         for (Beacon b : beacons) {
                             SeenBeacon seenBeacon = BeaconIO.getSeenBeacon(b.getBluetoothAddress());
-                            if(seenBeacon != null && !seenBeacon.isIgnore())
+                            if (seenBeacon != null && !seenBeacon.isIgnore())
                                 visibleBeacons.add(b);
                         }
 
@@ -113,38 +113,55 @@ public class BLEDataTracker implements BeaconConsumer {
                     }
                 });
 
+                int notificationId = 1;
+                int beaconCount = 0;
+                NotificationManager notifyMgr = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
+                NotificationCompat.Builder builder =
+                        new NotificationCompat.Builder(getApplicationContext())
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setColor(context.getResources().getColor(R.color.primary))
+                                .setGroup("BLE_FINDER_ALERT")
+                                .setContentTitle("Beacon Alert");
+                NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+
                 for (Beacon b : beacons) {
                     if (BeaconIO.getSeenBeacons().containsKey(b.getBluetoothAddress())) {
                         Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before.");
                         SeenBeacon seenBeacon = BeaconIO.getSeenBeacon(b.getBluetoothAddress());
-                        int notificationId = Integer.parseInt(b.getBluetoothAddress().replace(":", "").substring(0, 5), 16);
-                        NotificationManager notifyMgr = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
-                        boolean notified = false;
+                        //int notificationId = Integer.parseInt(b.getBluetoothAddress().replace(":", "").substring(0, 5), 16);
 
                         if(!seenBeacon.isIgnore() && Double.parseDouble(seenBeacon.getDistance()) >= b.getDistance()) {
+                            beaconCount++;
                             String savedName = seenBeacon.getUserName();
                             if(savedName.contains("BLEFinder\u2063"))
                                 savedName = b.getBluetoothName();
 
-                            NotificationCompat.Builder mBuilder =
-                                    new NotificationCompat.Builder(getApplicationContext())
-                                            .setSmallIcon(R.mipmap.ic_launcher)
-                                            .setColor(context.getResources().getColor(R.color.primary))
-                                            .setGroup("BLE_FINDER_ALERT")
-                                            .setContentTitle("Beacon Alert")
-                                            .setContentText(savedName + " is within " + seenBeacon.getDistance() + "m.");
-
-                            notifyMgr.notify(notificationId, mBuilder.build());
-                            notified = true;
-                        }
-
-                        if(!notified) {
-                            notifyMgr.cancel(notificationId);
+                            if(beaconCount == 1) {
+                                builder.setContentText(savedName + " is within " + seenBeacon.getDistance() + "m.");
+                            } else {
+                                inboxStyle.setBigContentTitle(beaconCount + " beacons nearby");
+                                if(beaconCount < 6) {
+                                    if(beaconCount == 2) {
+                                        inboxStyle.addLine(builder.mContentText.toString().replace(" is within ", "   ").replace(".", ""));
+                                    }
+                                    inboxStyle.addLine(savedName + "   " + seenBeacon.getDistance() + "m");
+                                } else {
+                                    inboxStyle.setSummaryText("+" + (beaconCount - 5) + " more");
+                                }
+                                builder.setContentText(beaconCount + " beacons nearby");
+                                builder.setStyle(inboxStyle);
+                            }
                         }
                     } else {
                         Log.i(TAG, "Just saw a beacon " + b.getBluetoothAddress() + " for the first time.");
                         BeaconIO.getSeenBeacons().put(b.getBluetoothAddress(), new SeenBeacon(b.getBluetoothAddress(), b.getBluetoothName()));
                     }
+                }
+
+                if(beaconCount == 0) {
+                    notifyMgr.cancel(1);
+                } else {
+                    notifyMgr.notify(notificationId, builder.build());
                 }
             }
         });
