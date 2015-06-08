@@ -116,13 +116,18 @@ public class BLEDataTracker implements BeaconConsumer {
                 for (Beacon b : beacons) {
                     if (BeaconIO.getSeenBeacons().containsKey(b.getBluetoothAddress())) {
                         Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before.");
-                        if(Double.parseDouble(BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getDistance()) >= b.getDistance()) {
+                        SeenBeacon seenBeacon = BeaconIO.getSeenBeacon(b.getBluetoothAddress());
+                        if(!seenBeacon.isIgnore() && Double.parseDouble(seenBeacon.getDistance()) >= b.getDistance()) {
+                            String savedName = seenBeacon.getUserName();
+                            if(savedName.contains("BLEFinder\u2063"))
+                                savedName = b.getBluetoothName();
+
                             NotificationCompat.Builder mBuilder =
                                     new NotificationCompat.Builder(getApplicationContext())
                                             .setSmallIcon(R.mipmap.ic_launcher)
                                             .setColor(context.getResources().getColor(R.color.primary))
                                             .setContentTitle("Beacon Alert")
-                                            .setContentText(b.getBluetoothName() + " is within range!");
+                                            .setContentText(savedName + " is within " + seenBeacon.getDistance() + "m.");
 
                             int mNotificationId = 1;
                             NotificationManager mNotifyMgr =
