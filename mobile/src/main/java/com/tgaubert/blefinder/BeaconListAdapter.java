@@ -1,7 +1,10 @@
 package com.tgaubert.blefinder;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +14,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cocosw.bottomsheet.BottomSheet;
 
@@ -26,13 +29,17 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        public View view;
         public TextView rowTitle, rowSubtitle;
+        public ImageView rowColor;
 
         public ViewHolder(View v) {
             super(v);
 
+            view = v;
             rowTitle = (TextView) v.findViewById(R.id.rowTitle);
             rowSubtitle = (TextView) v.findViewById(R.id.rowSubtitle);
+            rowColor = (ImageView) v.findViewById(R.id.colorTag);
 
             v.setOnClickListener(this);
         }
@@ -43,110 +50,120 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
 
             Beacon b = beacons.get(getPosition());
             String beaconName = b.getBluetoothName();
-            if(!BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
+            if (!BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
                 beaconName = BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName();
 
             new BottomSheet.Builder((MainActivity) view.getContext())
                     .title(beaconName)
                     .sheet(R.menu.beacon_sheet)
                     .listener(new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch(which) {
-                        case R.id.info:
-                            final Dialog infoDialog = new Dialog(view.getContext());
-                            infoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            infoDialog.setContentView(R.layout.dialog_beacon_info);
-                            WindowManager.LayoutParams params = infoDialog.getWindow().getAttributes();
-                            params.width = WindowManager.LayoutParams.MATCH_PARENT;
-                            infoDialog.getWindow().setAttributes(params);
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case R.id.info:
+                                    final Dialog infoDialog = new Dialog(view.getContext());
+                                    infoDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    infoDialog.setContentView(R.layout.dialog_beacon_info);
+                                    WindowManager.LayoutParams params = infoDialog.getWindow().getAttributes();
+                                    params.width = WindowManager.LayoutParams.MATCH_PARENT;
+                                    infoDialog.getWindow().setAttributes(params);
 
-                            Beacon b = beacons.get(getPosition());
-                            String beaconName = b.getBluetoothName();
-                            if(!BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
-                                beaconName = BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName();
+                                    Beacon b = beacons.get(getPosition());
+                                    String beaconName = b.getBluetoothName();
+                                    if (!BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
+                                        beaconName = BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName();
 
-                            ((TextView)infoDialog.findViewById(R.id.dialogTitle)).setText(beaconName);
-                            ((TextView)infoDialog.findViewById(R.id.dialogText)).setText(BeaconIO.getSeenBeacons().get(selected.getBluetoothAddress()).getJsonObject().toString());
-                            infoDialog.findViewById(R.id.dialogOk).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    infoDialog.dismiss();
-                                }
-                            });
-                            infoDialog.show();
-                            break;
-                        case R.id.rename:
-                            final Dialog renameDialog = new Dialog(view.getContext());
-                            renameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            renameDialog.setContentView(R.layout.dialog_beacon_rename);
-                            WindowManager.LayoutParams renameParams = renameDialog.getWindow().getAttributes();
-                            renameParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-                            renameDialog.getWindow().setAttributes(renameParams);
+                                    ((TextView) infoDialog.findViewById(R.id.dialogTitle)).setText(beaconName);
+                                    ((TextView) infoDialog.findViewById(R.id.dialogText)).setText(BeaconIO.getSeenBeacons().get(selected.getBluetoothAddress()).getJsonObject().toString());
+                                    infoDialog.findViewById(R.id.dialogOk).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            infoDialog.dismiss();
+                                        }
+                                    });
+                                    infoDialog.show();
+                                    break;
+                                case R.id.rename:
+                                    final Dialog renameDialog = new Dialog(view.getContext());
+                                    renameDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    renameDialog.setContentView(R.layout.dialog_beacon_rename);
+                                    WindowManager.LayoutParams renameParams = renameDialog.getWindow().getAttributes();
+                                    renameParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+                                    renameDialog.getWindow().setAttributes(renameParams);
 
-                            final EditText name = ((EditText) renameDialog.findViewById(R.id.dialogEditText));
-                            name.setHint(selected.getBluetoothName());
+                                    final EditText name = ((EditText) renameDialog.findViewById(R.id.dialogEditText));
+                                    name.setHint(selected.getBluetoothName());
 
-                            name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                                @Override
-                                public void onFocusChange(View v, boolean hasFocus) {
-                                    if (hasFocus) {
-                                        renameDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                                    }
-                                }
-                            });
+                                    name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                                        @Override
+                                        public void onFocusChange(View v, boolean hasFocus) {
+                                            if (hasFocus) {
+                                                renameDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                                            }
+                                        }
+                                    });
 
-                            String currentName = BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).getUserName();
-                            if(currentName.contains("BLEFinder\u2063"))
-                                name.setText("");
-                            else
-                                name.setText(currentName);
+                                    String currentName = BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).getUserName();
+                                    if (currentName.contains("BLEFinder\u2063"))
+                                        name.setText("");
+                                    else
+                                        name.setText(currentName);
 
-                            name.setSelection(name.getText().length());
+                                    name.setSelection(name.getText().length());
 
-                            renameDialog.findViewById(R.id.dialogCancel).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    renameDialog.dismiss();
-                                }
-                            });
+                                    renameDialog.findViewById(R.id.dialogCancel).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            renameDialog.dismiss();
+                                        }
+                                    });
 
-                            renameDialog.findViewById(R.id.dialogOk).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if(name.getText().toString().equals("")) {
-                                        name.setText("BLEFinder\u2063");
-                                    }
+                                    renameDialog.findViewById(R.id.dialogOk).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (name.getText().toString().equals("")) {
+                                                name.setText("BLEFinder\u2063");
+                                            }
 
-                                    BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).setUserName(name.getText().toString());
-                                    renameDialog.dismiss();
-                                }
-                            });
-                            renameDialog.show();
-                            break;
-                        case R.id.color:
-                            Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "To be implemented...", Snackbar.LENGTH_LONG).show();
-                            break;
-                        case R.id.notify:
-                            Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "To be implemented...", Snackbar.LENGTH_LONG).show();
-                            break;
-                        case R.id.ignore:
-                            AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                            builder.setTitle("Ignore Beacon");
-                            builder.setMessage("Are you sure you want to ignore this beacon?");
-                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    BeaconIO.getSeenBeacons().get(selected.getBluetoothAddress()).setIgnore(true);
-                                    Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "Ignoring " + selected.getBluetoothName() + ".", Snackbar.LENGTH_LONG).show();
-                                }
-                            });
-                            builder.setNegativeButton("No", null);
-                            builder.show();
-                            break;
-                    }
-                }
-            }).show();
+                                            BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).setUserName(name.getText().toString());
+                                            renameDialog.dismiss();
+                                        }
+                                    });
+                                    renameDialog.show();
+                                    break;
+                                case R.id.color:
+                                    HSVColorPickerDialog cpd = new HSVColorPickerDialog(view.getContext(), 0xFF4488CC, new HSVColorPickerDialog.OnColorSelectedListener() {
+                                        @Override
+                                        public void colorSelected(Integer color) {
+                                            if(color == -1)
+                                                color = 0;
+                                            BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).setColor(color);
+                                        }
+                                    });
+                                    cpd.setTitle("Pick a color");
+                                    cpd.setNoColorButton(R.string.action_none);
+                                    cpd.show();
+                                    break;
+                                case R.id.notify:
+                                    Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "To be implemented...", Snackbar.LENGTH_LONG).show();
+                                    break;
+                                case R.id.ignore:
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                                    builder.setTitle("Ignore Beacon");
+                                    builder.setMessage("Are you sure you want to ignore this beacon?");
+                                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            BeaconIO.getSeenBeacons().get(selected.getBluetoothAddress()).setIgnore(true);
+                                            Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "Ignoring " + selected.getBluetoothName() + ".", Snackbar.LENGTH_LONG).show();
+                                        }
+                                    });
+                                    builder.setNegativeButton("No", null);
+                                    builder.show();
+                                    break;
+                            }
+                        }
+                    }).show();
         }
     }
 
@@ -179,11 +196,24 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Beacon b = beacons.get(position);
-        if(BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
+        if (BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
             holder.rowTitle.setText(b.getBluetoothName());
         else
             holder.rowTitle.setText(BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName());
         holder.rowSubtitle.setText(b.getDistance() + " meters away");
+
+        Context context = holder.view.getContext();
+        GradientDrawable colorTag;
+
+        if(Build.VERSION.SDK_INT < 21)
+            //noinspection deprecation
+            colorTag = (GradientDrawable) context.getResources().getDrawable(R.drawable.circle);
+        else
+            colorTag = (GradientDrawable) context.getResources().getDrawable(R.drawable.circle, context.getTheme());
+
+        if(colorTag != null)
+            colorTag.setColor(BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getColor());
+        holder.rowColor.setImageDrawable(colorTag);
     }
 
     @Override

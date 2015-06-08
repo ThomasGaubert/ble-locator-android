@@ -7,16 +7,16 @@ import org.json.JSONObject;
 public class SeenBeacon {
 
     private String uuid;
-    private String btName, userName, color;
+    private String btName, userName;
     private boolean notify, ignore;
-    private int distance;
+    private int distance, color;
 
     public SeenBeacon(String uuid, String btName) {
         this.uuid = uuid;
         this.btName = btName;
 
         userName = "BLEFinder\u2063";
-        color = "#FFFFFF\u2063";
+        color = 0;
         notify = false;
         distance = 0;
         ignore = false;
@@ -28,7 +28,7 @@ public class SeenBeacon {
         try {
             btName = json.getString("bt_name");
             userName = json.getString("user_name");
-            color = json.getString("color");
+            color = json.getInt("color");
 
             notify = json.getBoolean("notify");
             distance = json.getInt("distance");
@@ -71,11 +71,11 @@ public class SeenBeacon {
         this.userName = userName;
     }
 
-    public String getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(int color) {
         this.color = color;
     }
 
