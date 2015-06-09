@@ -57,9 +57,17 @@ public class BLEDataTracker implements BeaconConsumer {
         BeaconIO.loadBeacons(context);
 
         beaconManager = BeaconManager.getInstanceForApplication(context);
-        beaconManager.getBeaconParsers().add(new BeaconParser().
-                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        try {
+            // Attempt to register iBeacon layout, will throw UnsupportedOperationException if
+            // resuming from background.
+            beaconManager.getBeaconParsers().add(new BeaconParser().
+                    setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        } catch(UnsupportedOperationException e) { e.printStackTrace(); }
         beaconManager.bind(this);
+    }
+
+    public ArrayList<Beacon> getValidBeacons() {
+        return validBeacons;
     }
 
     public void setTracking(boolean isTracking) {

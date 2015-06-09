@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     private BLEDataTracker bleDataTracker;
+    private Handler refreshHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
         bleDataTracker = new BLEDataTracker(getApplicationContext());
 
         setContentView(R.layout.activity_main);
+
+        refreshHandler = new Handler();
+        refreshHandler.postDelayed(refreshRunner, 5000);
     }
 
     @Override
@@ -85,4 +90,14 @@ public class MainActivity extends AppCompatActivity {
     public BLEDataTracker getBleDataTracker() {
         return bleDataTracker;
     }
+
+    private final Runnable refreshRunner = new Runnable() {
+        public void run() {
+            if(bleDataTracker != null && bleDataTracker.isTracking()) {
+                ((BeaconListAdapter) ((EmptyRecyclerView) findViewById(R.id.beaconList)).getAdapter()).set(bleDataTracker.getValidBeacons());
+            }
+
+            refreshHandler.postDelayed(refreshRunner, 100);
+        }
+    };
 }

@@ -20,9 +20,6 @@ public class MainActivityFragment extends Fragment {
 
     private View rootView;
     private FloatingActionButton floatingActionButton;
-    private EmptyRecyclerView recyclerView;
-    private BeaconListAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -47,12 +44,12 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        recyclerView = (EmptyRecyclerView) rootView.findViewById(R.id.beaconList);
+        EmptyRecyclerView recyclerView = (EmptyRecyclerView) rootView.findViewById(R.id.beaconList);
 
-        layoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new BeaconListAdapter(new ArrayList<Beacon>());
+        BeaconListAdapter adapter = new BeaconListAdapter(new ArrayList<Beacon>());
         recyclerView.setAdapter(adapter);
         recyclerView.setEmptyView(rootView.findViewById(R.id.msgView));
 
