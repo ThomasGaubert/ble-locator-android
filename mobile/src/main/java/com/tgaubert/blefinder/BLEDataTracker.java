@@ -1,6 +1,7 @@
 package com.tgaubert.blefinder;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -106,6 +107,11 @@ public class BLEDataTracker implements BeaconConsumer {
                                 .setGroup("BLE_FINDER_ALERT")
                                 .setContentTitle("Beacon Alert");
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+
+                final Intent notificationIntent = new Intent(context, MainActivity.class);
+                notificationIntent.setAction(Intent.ACTION_MAIN);
+                notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                builder.setContentIntent(PendingIntent.getActivity(context, 0, notificationIntent, 0));
 
                 for (Beacon b : beacons) {
                     if (BeaconIO.getSeenBeacons().containsKey(b.getBluetoothAddress())) {
