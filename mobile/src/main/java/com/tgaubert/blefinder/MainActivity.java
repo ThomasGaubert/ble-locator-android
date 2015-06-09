@@ -1,8 +1,6 @@
 package com.tgaubert.blefinder;
 
 import android.app.Dialog;
-import android.app.NotificationManager;
-import android.app.Service;
 import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -23,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bleDataTracker = new BLEDataTracker(this);
+        bleDataTracker = new BLEDataTracker(getApplicationContext());
 
         setContentView(R.layout.activity_main);
     }
@@ -32,12 +30,6 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         BeaconIO.saveBeacons(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        ((NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE)).cancel(1);
     }
 
     @Override

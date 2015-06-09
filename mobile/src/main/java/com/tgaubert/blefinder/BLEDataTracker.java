@@ -6,6 +6,8 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -85,7 +87,8 @@ public class BLEDataTracker implements BeaconConsumer {
             public void didRangeBeaconsInRegion(final Collection<Beacon> beacons, Region region) {
                 setBeacons(beacons);
                 final ArrayList<Beacon> visibleBeacons = new ArrayList<>();
-                ((MainActivity) context).runOnUiThread(new Runnable() {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
                     @Override
                     public void run() {
                         for (Beacon b : beacons) {
