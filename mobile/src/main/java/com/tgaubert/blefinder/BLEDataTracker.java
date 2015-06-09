@@ -13,7 +13,6 @@ import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
-import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 
@@ -29,9 +28,11 @@ public class BLEDataTracker implements BeaconConsumer {
     private Context context;
 
     private String TAG = "BLEDataTracker";
+    private NotificationManager notifyMgr;
 
     public BLEDataTracker(final Context context) {
         this.context = context;
+        notifyMgr = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
 
         BeaconIO.loadBeacons(context);
 
@@ -54,13 +55,12 @@ public class BLEDataTracker implements BeaconConsumer {
 
         try {
             if (isTracking) {
-                beaconManager.startMonitoringBeaconsInRegion(new Region("BLEFinder", null, null, null));
                 beaconManager.startRangingBeaconsInRegion(new Region("BLEFinder", null, null, null));
             } else {
-                beaconManager.stopMonitoringBeaconsInRegion(new Region("BLEFinder", null, null, null));
                 beaconManager.stopRangingBeaconsInRegion(new Region("BLEFinder", null, null, null));
 
                 BeaconIO.saveBeacons(context);
+                notifyMgr.cancel(1);
             }
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -78,22 +78,6 @@ public class BLEDataTracker implements BeaconConsumer {
     @Override
     public void onBeaconServiceConnect() {
         Log.i(TAG, "Connected to service");
-        beaconManager.setMonitorNotifier(new MonitorNotifier() {
-            @Override
-            public void didEnterRegion(Region region) {
-                Log.i(TAG, "Found a beacon for the first time");
-            }
-
-            @Override
-            public void didExitRegion(Region region) {
-                Log.i(TAG, "No beacons within range");
-            }
-
-            @Override
-            public void didDetermineStateForRegion(int state, Region region) {
-                Log.i(TAG, "Switched from seeing/not seeing beacons: " + state);
-            }
-        });
 
         beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
@@ -115,7 +99,6 @@ public class BLEDataTracker implements BeaconConsumer {
 
                 int notificationId = 1;
                 int beaconCount = 0;
-                NotificationManager notifyMgr = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
                 NotificationCompat.Builder builder =
                         new NotificationCompat.Builder(getApplicationContext())
                                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -128,7 +111,6 @@ public class BLEDataTracker implements BeaconConsumer {
                     if (BeaconIO.getSeenBeacons().containsKey(b.getBluetoothAddress())) {
                         Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before.");
                         SeenBeacon seenBeacon = BeaconIO.getSeenBeacon(b.getBluetoothAddress());
-                        //int notificationId = Integer.parseInt(b.getBluetoothAddress().replace(":", "").substring(0, 5), 16);
 
                         if(!seenBeacon.isIgnore() && Double.parseDouble(seenBeacon.getDistance()) >= b.getDistance()) {
                             beaconCount++;
@@ -168,7 +150,6 @@ public class BLEDataTracker implements BeaconConsumer {
 
         try {
             if (isTracking) {
-                beaconManager.startMonitoringBeaconsInRegion(new Region("BLEFinder", null, null, null));
                 beaconManager.startRangingBeaconsInRegion(new Region("BLEFinder", null, null, null));
             }
         } catch (RemoteException e) {
@@ -184,6 +165,7 @@ public class BLEDataTracker implements BeaconConsumer {
     @Override
     public void unbindService(ServiceConnection serviceConnection) {
         context.unbindService(serviceConnection);
+        notifyMgr.cancel(1);
     }
 
     @Override

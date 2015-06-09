@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private String TAG = "BLEFinderMainActivity";
     private BLEDataTracker bleDataTracker;
 
     @Override
