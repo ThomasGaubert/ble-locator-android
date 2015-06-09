@@ -105,6 +105,7 @@ public class BLEDataTracker implements BeaconConsumer {
                                 .setSmallIcon(R.mipmap.ic_launcher)
                                 .setColor(context.getResources().getColor(R.color.primary))
                                 .setGroup("BLE_FINDER_ALERT")
+                                .setOngoing(true)
                                 .setContentTitle("Beacon Alert");
                 NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
