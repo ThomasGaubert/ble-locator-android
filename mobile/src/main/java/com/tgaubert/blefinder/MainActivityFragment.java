@@ -56,7 +56,7 @@ public class MainActivityFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setEmptyView(rootView.findViewById(R.id.msgView));
 
-        ((MainActivity) getActivity()).getBleDataTracker().setListAdapter(adapter);
+        ((BLEFinderApplication) getActivity().getApplication()).setAdapter(adapter);
 
         return rootView;
     }

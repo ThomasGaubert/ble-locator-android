@@ -26,16 +26,33 @@ public class BLEDataTracker implements BeaconConsumer {
 
     private BeaconManager beaconManager;
     private Collection<Beacon> beacons;
-    private BeaconListAdapter listAdapter;
     private boolean isTracking = false;
     private Context context;
 
     private String TAG = "BLEDataTracker";
     private NotificationManager notifyMgr;
 
+    private NotificationCompat.Builder builder;
+    private NotificationCompat.InboxStyle inboxStyle;
+    private Intent notificationIntent;
+    private final int NOTIFICATION_ID = 1;
+    private int beaconCount = 0;
+
     public BLEDataTracker(final Context context) {
         this.context = context;
         notifyMgr = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
+
+        builder = new NotificationCompat.Builder(getApplicationContext())
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setColor(context.getResources().getColor(R.color.primary))
+                        .setGroup("BLE_FINDER_ALERT")
+                        .setOngoing(true)
+                        .setContentTitle("Beacon Alert");
+        inboxStyle = new NotificationCompat.InboxStyle();
+        notificationIntent = new Intent(context, MainActivity.class);
+        notificationIntent.setAction(Intent.ACTION_MAIN);
+        notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        builder.setContentIntent(PendingIntent.getActivity(context, 0, notificationIntent, 0));
 
         BeaconIO.loadBeacons(context);
 
@@ -74,10 +91,6 @@ public class BLEDataTracker implements BeaconConsumer {
         return isTracking;
     }
 
-    public void setListAdapter(BeaconListAdapter listAdapter) {
-        this.listAdapter = listAdapter;
-    }
-
     @Override
     public void onBeaconServiceConnect() {
         Log.i(TAG, "Connected to service");
@@ -97,25 +110,10 @@ public class BLEDataTracker implements BeaconConsumer {
                                 visibleBeacons.add(b);
                         }
 
-                        listAdapter.set(visibleBeacons);
+                        ((BLEFinderApplication) context).getAdapter().set(visibleBeacons);
+                        //listAdapter.set(visibleBeacons);
                     }
                 });
-
-                int notificationId = 1;
-                int beaconCount = 0;
-                NotificationCompat.Builder builder =
-                        new NotificationCompat.Builder(getApplicationContext())
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setColor(context.getResources().getColor(R.color.primary))
-                                .setGroup("BLE_FINDER_ALERT")
-                                .setOngoing(true)
-                                .setContentTitle("Beacon Alert");
-                NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-
-                final Intent notificationIntent = new Intent(context, MainActivity.class);
-                notificationIntent.setAction(Intent.ACTION_MAIN);
-                notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-                builder.setContentIntent(PendingIntent.getActivity(context, 0, notificationIntent, 0));
 
                 for (Beacon b : beacons) {
                     if (BeaconIO.getSeenBeacons().containsKey(b.getBluetoothAddress())) {
@@ -153,8 +151,10 @@ public class BLEDataTracker implements BeaconConsumer {
                 if(beaconCount == 0) {
                     notifyMgr.cancel(1);
                 } else {
-                    notifyMgr.notify(notificationId, builder.build());
+                    notifyMgr.notify(NOTIFICATION_ID, builder.build());
                 }
+
+                beaconCount = 0;
             }
         });
 
