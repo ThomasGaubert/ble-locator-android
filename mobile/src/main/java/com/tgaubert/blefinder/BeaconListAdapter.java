@@ -208,18 +208,6 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
 
     public void set(ArrayList<Beacon> beacons) {
         this.beacons = beacons;
-        notifyDataSetChanged();
-    }
-
-    public void add(int position, Beacon item) {
-        beacons.add(position, item);
-        notifyItemInserted(position);
-    }
-
-    public void remove(Beacon item) {
-        int position = beacons.indexOf(item);
-        beacons.remove(position);
-        notifyItemRemoved(position);
     }
 
     public BeaconListAdapter(ArrayList<Beacon> beacons) {

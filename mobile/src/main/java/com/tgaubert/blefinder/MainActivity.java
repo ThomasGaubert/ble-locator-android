@@ -94,7 +94,9 @@ public class MainActivity extends AppCompatActivity {
     private final Runnable refreshRunner = new Runnable() {
         public void run() {
             if(bleDataTracker != null && bleDataTracker.isTracking()) {
-                ((BeaconListAdapter) ((EmptyRecyclerView) findViewById(R.id.beaconList)).getAdapter()).set(bleDataTracker.getValidBeacons());
+                BeaconListAdapter adapter = ((BeaconListAdapter) ((EmptyRecyclerView) findViewById(R.id.beaconList)).getAdapter());
+                adapter.set(bleDataTracker.getValidBeacons());
+                adapter.notifyDataSetChanged();
             }
 
             refreshHandler.postDelayed(refreshRunner, 100);
