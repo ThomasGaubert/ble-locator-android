@@ -6,8 +6,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -21,11 +19,12 @@ import org.altbeacon.beacon.Region;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 public class BLEDataTracker implements BeaconConsumer {
 
     private BeaconManager beaconManager;
-    private Collection<Beacon> beacons;
+    private ArrayList<Beacon> validBeacons;
     private boolean isTracking = false;
     private Context context;
 
@@ -40,14 +39,15 @@ public class BLEDataTracker implements BeaconConsumer {
 
     public BLEDataTracker(final Context context) {
         this.context = context;
-        notifyMgr = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
+        validBeacons = new ArrayList<>();
 
+        notifyMgr = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
         builder = new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setColor(context.getResources().getColor(R.color.primary))
-                        .setGroup("BLE_FINDER_ALERT")
-                        .setOngoing(true)
-                        .setContentTitle("Beacon Alert");
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setColor(context.getResources().getColor(R.color.primary))
+                .setGroup("BLE_FINDER_ALERT")
+                .setOngoing(true)
+                .setContentTitle("Beacon Alert");
         inboxStyle = new NotificationCompat.InboxStyle();
         notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setAction(Intent.ACTION_MAIN);
@@ -60,14 +60,6 @@ public class BLEDataTracker implements BeaconConsumer {
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         beaconManager.bind(this);
-    }
-
-    public void setBeacons(Collection<Beacon> beacons) {
-        this.beacons = beacons;
-    }
-
-    public Collection<Beacon> getBeacons() {
-        return beacons;
     }
 
     public void setTracking(boolean isTracking) {
@@ -98,27 +90,37 @@ public class BLEDataTracker implements BeaconConsumer {
         beaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(final Collection<Beacon> beacons, Region region) {
-                setBeacons(beacons);
-                final ArrayList<Beacon> visibleBeacons = new ArrayList<>();
+                HashMap<String, SeenBeacon> seenBeacons = BeaconIO.getSeenBeacons();
+                validBeacons.clear();
+                /* REMOVE
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
                         for (Beacon b : beacons) {
                             SeenBeacon seenBeacon = BeaconIO.getSeenBeacon(b.getBluetoothAddress());
-                            if (seenBeacon != null && !seenBeacon.isIgnore())
-                                visibleBeacons.add(b);
+                            if (seenBeacon == null || seenBeacon.isIgnore())
+                                beacons.remove(b);
                         }
 
-                        ((BLEFinderApplication) context).getAdapter().set(visibleBeacons);
-                        //listAdapter.set(visibleBeacons);
+                        if(mainActivity != null) {
+                            EmptyRecyclerView recyclerView = (EmptyRecyclerView) mainActivity.findViewById(R.id.beaconList);
+                            ((BeaconListAdapter) recyclerView.getAdapter()).set(visibleBeacons);
+                        }
                     }
-                });
+                }); */
 
                 for (Beacon b : beacons) {
-                    if (BeaconIO.getSeenBeacons().containsKey(b.getBluetoothAddress())) {
+                    if (seenBeacons.containsKey(b.getBluetoothAddress())) {
+                        if (seenBeacons.get(b.getBluetoothAddress()).isIgnore()) {
+                            Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before, but will be ignored.");
+                            continue;
+                        }
+
                         Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before.");
-                        SeenBeacon seenBeacon = BeaconIO.getSeenBeacon(b.getBluetoothAddress());
+                        validBeacons.add(b);
+
+                        SeenBeacon seenBeacon = seenBeacons.get(b.getBluetoothAddress());
 
                         if(!seenBeacon.isIgnore() && Double.parseDouble(seenBeacon.getDistance()) >= b.getDistance()) {
                             beaconCount++;
