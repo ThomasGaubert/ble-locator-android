@@ -153,7 +153,9 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                     notifyDialog.getWindow().setAttributes(notifyParams);
 
                                     final EditText distEditText = ((EditText) notifyDialog.findViewById(R.id.notifyDistance));
-                                    distEditText.setText(BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).getDistance());
+                                    String distance = BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).getDistance();
+                                    if(Integer.parseInt(distance) != 0)
+                                        distEditText.setText(distance);
                                     distEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                         @Override
                                         public void onFocusChange(View v, boolean hasFocus) {
