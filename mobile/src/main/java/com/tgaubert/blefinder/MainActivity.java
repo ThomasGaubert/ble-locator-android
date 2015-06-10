@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         notifyMgr.cancel(1);
+        bleDataTracker.unbind();
     }
 
     @Override
@@ -116,10 +117,10 @@ public class MainActivity extends AppCompatActivity {
                 FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_btn);
                 if(bleDataTracker.isTracking()) {
                     floatingActionButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.bt_scan, null));
-                    ((TextView) findViewById(R.id.msgSubtitle)).setText("Start scanning to find beacons.");
+                    ((TextView) findViewById(R.id.msgSubtitle)).setText("No beacons found nearby.");
                 } else {
                     floatingActionButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.bluetooth, null));
-                    ((TextView) findViewById(R.id.msgSubtitle)).setText("No beacons found nearby.");
+                    ((TextView) findViewById(R.id.msgSubtitle)).setText("Start scanning to find beacons.");
                 }
             }
 

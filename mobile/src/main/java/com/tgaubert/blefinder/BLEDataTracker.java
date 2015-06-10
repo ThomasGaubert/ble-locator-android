@@ -166,6 +166,10 @@ public class BLEDataTracker implements BeaconConsumer {
         isTracking = beaconManager.getRangedRegions().size() != 0;
     }
 
+    public void unbind() {
+        beaconManager.unbind(this);
+    }
+
     @Override
     public Context getApplicationContext() {
         return context;
