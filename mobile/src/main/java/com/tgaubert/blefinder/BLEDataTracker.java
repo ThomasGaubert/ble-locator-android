@@ -33,7 +33,6 @@ public class BLEDataTracker implements BeaconConsumer {
 
     private NotificationCompat.Builder builder;
     private NotificationCompat.InboxStyle inboxStyle;
-    private Intent notificationIntent;
     private final int NOTIFICATION_ID = 1;
     private int beaconCount = 0;
 
@@ -41,15 +40,18 @@ public class BLEDataTracker implements BeaconConsumer {
         this.context = context;
         validBeacons = new ArrayList<>();
 
+        Intent stopIntent = new Intent(context, StopScanningReceiver.class);
+        PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         notifyMgr = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
         builder = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setColor(context.getResources().getColor(R.color.primary))
                 .setGroup("BLE_FINDER_ALERT")
                 .setOngoing(true)
-                .setContentTitle("Beacon Alert");
+                .setContentTitle("Beacon Alert")
+                .addAction(new NotificationCompat.Action(R.drawable.stop, "Stop scanning", stopPendingIntent));
         inboxStyle = new NotificationCompat.InboxStyle();
-        notificationIntent = new Intent(context, MainActivity.class);
+        Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setAction(Intent.ACTION_MAIN);
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         builder.setContentIntent(PendingIntent.getActivity(context, 0, notificationIntent, 0));
