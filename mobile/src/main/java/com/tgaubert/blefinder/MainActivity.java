@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            refreshHandler.postDelayed(refreshRunner, 1000);
+            refreshHandler.postDelayed(refreshRunner, 250);
         }
     };
 }
