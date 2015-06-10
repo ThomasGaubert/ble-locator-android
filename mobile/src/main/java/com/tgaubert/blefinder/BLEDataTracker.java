@@ -49,7 +49,7 @@ public class BLEDataTracker implements BeaconConsumer {
                 .setGroup("BLE_FINDER_ALERT")
                 .setOngoing(true)
                 .setContentTitle("Beacon Alert")
-                .addAction(new NotificationCompat.Action(R.drawable.stop, "Stop scanning", stopPendingIntent));
+                .addAction(new NotificationCompat.Action(R.drawable.stop, "Stop Scanning", stopPendingIntent));
         inboxStyle = new NotificationCompat.InboxStyle();
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setAction(Intent.ACTION_MAIN);
@@ -138,7 +138,7 @@ public class BLEDataTracker implements BeaconConsumer {
                             }
                         }
                     } else {
-                        Log.i(TAG, "Just saw a beacon " + b.getBluetoothAddress() + " for the first time.");
+                        Log.i(TAG, "Just saw beacon " + b.getBluetoothAddress() + " for the first time.");
                         BeaconIO.getSeenBeacons().put(b.getBluetoothAddress(), new SeenBeacon(b.getBluetoothAddress(), b.getBluetoothName()));
                     }
                 }
