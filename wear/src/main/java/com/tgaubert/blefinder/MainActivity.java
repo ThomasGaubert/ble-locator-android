@@ -53,9 +53,6 @@ public class MainActivity extends Activity implements WearableListView.ClickList
                 }
                 finish();
                 break;
-            case 1:
-                Toast.makeText(this, "To be implemented...", Toast.LENGTH_SHORT).show();
-                break;
         }
     }
 
@@ -106,8 +103,6 @@ public class MainActivity extends Activity implements WearableListView.ClickList
             items.add(new ListItem(R.mipmap.ic_launcher, "Stop Scan"));
         else
             items.add(new ListItem(R.mipmap.ic_launcher, "Start Scan"));
-
-        items.add(new ListItem(R.mipmap.ic_launcher, "Start Broadcast"));
 
         mAdapter = new ListAdapter(this, items);
 
