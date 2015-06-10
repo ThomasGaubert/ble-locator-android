@@ -49,7 +49,7 @@ public class BLEDataTracker implements BeaconConsumer {
                 .setGroup("BLE_FINDER_ALERT")
                 .setOngoing(true)
                 .setContentTitle("Scanning for beacons...")
-                .addAction(new NotificationCompat.Action(R.drawable.stop, "Stop scanning", stopPendingIntent));
+                .addAction(new NotificationCompat.Action(R.drawable.stop, "Stop Scanning", stopPendingIntent));
         inboxStyle = new NotificationCompat.InboxStyle();
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setAction(Intent.ACTION_MAIN);
@@ -106,11 +106,11 @@ public class BLEDataTracker implements BeaconConsumer {
                 for (Beacon b : beacons) {
                     if (seenBeacons.containsKey(b.getBluetoothAddress())) {
                         if (seenBeacons.get(b.getBluetoothAddress()).isIgnore()) {
-                            //Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before, but will be ignored.");
+                            Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before, but will be ignored.");
                             continue;
                         }
 
-                        //Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before.");
+                        Log.i(TAG, "Beacon " + b.getBluetoothAddress() + " has been seen before.");
                         validBeacons.add(b);
 
                         SeenBeacon seenBeacon = seenBeacons.get(b.getBluetoothAddress());
@@ -122,24 +122,21 @@ public class BLEDataTracker implements BeaconConsumer {
                             if(savedName.contains("BLEFinder\u2063"))
                                 savedName = b.getBluetoothName();
                             */
-
-                            if(beaconCount == 0) {
-                                builder.setContentText("No nearby beacons");
-                            } else {
-                                builder.setContentText(beaconCount + " beacons nearby");
-                            }
                         }
                     } else {
                         Log.i(TAG, "Just saw a beacon " + b.getBluetoothAddress() + " for the first time.");
                         BeaconIO.getSeenBeacons().put(b.getBluetoothAddress(), new SeenBeacon(b.getBluetoothAddress(), b.getBluetoothName()));
+                        beaconCount++;
+                    }
+
+                    if(beaconCount == 0) {
+                        builder.setContentText("No nearby beacons");
+                    } else {
+                        builder.setContentText(beaconCount + " beacons nearby");
                     }
                 }
 
-                if(beaconCount == 0) {
-                    notifyMgr.cancel(1);
-                } else {
-                    notifyMgr.notify(NOTIFICATION_ID, builder.build());
-                }
+                notifyMgr.notify(NOTIFICATION_ID, builder.build());
 
                 beaconCount = 0;
             }

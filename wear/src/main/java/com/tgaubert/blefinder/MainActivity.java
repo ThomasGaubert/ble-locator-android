@@ -44,8 +44,13 @@ public class MainActivity extends Activity implements WearableListView.ClickList
     public void onClick(WearableListView.ViewHolder viewHolder) {
         switch (viewHolder.getLayoutPosition()) {
             case 0:
-                bleDataTracker.setTracking(true);
-                Toast.makeText(this, "Scanning...", Toast.LENGTH_SHORT).show();
+                if(BeaconManager.getInstanceForApplication(getApplicationContext()).getRangedRegions().size() > 0) {
+                    bleDataTracker.setTracking(false);
+                    Toast.makeText(this, "Stopping scanning...", Toast.LENGTH_SHORT).show();
+                } else {
+                    bleDataTracker.setTracking(true);
+                    Toast.makeText(this, "Scanning...", Toast.LENGTH_SHORT).show();
+                }
                 finish();
                 break;
             case 1:
