@@ -1,5 +1,6 @@
 package com.tgaubert.blefinder;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,11 +21,14 @@ public class MainActivityFragment extends Fragment {
 
     private View rootView;
     private FloatingActionButton floatingActionButton;
+    private Drawable scanningDrawable, idleDrawable;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        scanningDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.bt_scan, null);
+        idleDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.bluetooth, null);
 
         floatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.floating_btn);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -32,12 +36,12 @@ public class MainActivityFragment extends Fragment {
             public void onClick(View v) {
                 if(((MainActivity) getActivity()).getBleDataTracker().isTracking()) {
                     Snackbar.make(v, "Done searching for beacons.", Snackbar.LENGTH_LONG).show();
-                    floatingActionButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.bluetooth, null));
+                    floatingActionButton.setImageDrawable(idleDrawable);
                     ((TextView) rootView.findViewById(R.id.msgSubtitle)).setText("Start scanning to find beacons.");
                     ((MainActivity) getActivity()).getBleDataTracker().setTracking(false);
                 } else {
                     Snackbar.make(v, "Searching for beacons...", Snackbar.LENGTH_LONG).show();
-                    floatingActionButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.bt_scan, null));
+                    floatingActionButton.setImageDrawable(scanningDrawable);
                     ((TextView) rootView.findViewById(R.id.msgSubtitle)).setText("No beacons found nearby.");
                     ((MainActivity) getActivity()).getBleDataTracker().setTracking(true);
                 }

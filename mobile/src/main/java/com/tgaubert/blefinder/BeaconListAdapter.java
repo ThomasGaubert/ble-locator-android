@@ -46,9 +46,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
 
         @Override
         public void onClick(final View view) {
-            final Beacon selected = beacons.get(getPosition());
-
-            Beacon b = beacons.get(getPosition());
+            final Beacon b = beacons.get(getLayoutPosition());
             String beaconName = b.getBluetoothName();
             if (!BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
                 beaconName = BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName();
@@ -68,13 +66,12 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                     params.width = WindowManager.LayoutParams.MATCH_PARENT;
                                     infoDialog.getWindow().setAttributes(params);
 
-                                    Beacon b = beacons.get(getPosition());
                                     String beaconName = b.getBluetoothName();
                                     if (!BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
                                         beaconName = BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName();
 
                                     ((TextView) infoDialog.findViewById(R.id.dialogTitle)).setText(beaconName);
-                                    ((TextView) infoDialog.findViewById(R.id.dialogText)).setText(BeaconIO.getSeenBeacons().get(selected.getBluetoothAddress()).getJsonObject().toString());
+                                    ((TextView) infoDialog.findViewById(R.id.dialogText)).setText(BeaconIO.getSeenBeacons().get(b.getBluetoothAddress()).getJsonObject().toString());
                                     infoDialog.findViewById(R.id.dialogOk).setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -92,7 +89,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                     renameDialog.getWindow().setAttributes(renameParams);
 
                                     final EditText name = ((EditText) renameDialog.findViewById(R.id.dialogEditText));
-                                    name.setHint(selected.getBluetoothName());
+                                    name.setHint(b.getBluetoothName());
 
                                     name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                         @Override
@@ -103,7 +100,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                         }
                                     });
 
-                                    String currentName = BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).getUserName();
+                                    String currentName = BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName();
                                     if (currentName.contains("BLEFinder\u2063"))
                                         name.setText("");
                                     else
@@ -125,7 +122,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                                 name.setText("BLEFinder\u2063");
                                             }
 
-                                            BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).setUserName(name.getText().toString());
+                                            BeaconIO.getSeenBeacon(b.getBluetoothAddress()).setUserName(name.getText().toString());
                                             renameDialog.dismiss();
                                         }
                                     });
@@ -137,7 +134,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                         public void colorSelected(Integer color) {
                                             if(color == -1)
                                                 color = 0;
-                                            BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).setColor(color);
+                                            BeaconIO.getSeenBeacon(b.getBluetoothAddress()).setColor(color);
                                         }
                                     });
                                     cpd.setTitle("Pick a color");
@@ -153,7 +150,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                     notifyDialog.getWindow().setAttributes(notifyParams);
 
                                     final EditText distEditText = ((EditText) notifyDialog.findViewById(R.id.notifyDistance));
-                                    String distance = BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).getDistance();
+                                    String distance = BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getDistance();
                                     if(Integer.parseInt(distance) != 0)
                                         distEditText.setText(distance);
                                     distEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -179,7 +176,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                             String distance = distEditText.getText().toString();
                                             if(distance.trim().equals(""))
                                                 distance = "0";
-                                            BeaconIO.getSeenBeacon(selected.getBluetoothAddress()).setDistance(distance);
+                                            BeaconIO.getSeenBeacon(b.getBluetoothAddress()).setDistance(distance);
                                             notifyDialog.dismiss();
                                         }
                                     });
@@ -193,8 +190,8 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            BeaconIO.getSeenBeacons().get(selected.getBluetoothAddress()).setIgnore(true);
-                                            Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "Ignoring " + selected.getBluetoothName() + ".", Snackbar.LENGTH_LONG).show();
+                                            BeaconIO.getSeenBeacons().get(b.getBluetoothAddress()).setIgnore(true);
+                                            Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "Ignoring " + b.getBluetoothName() + ".", Snackbar.LENGTH_LONG).show();
                                         }
                                     });
                                     builder.setNegativeButton("No", null);
