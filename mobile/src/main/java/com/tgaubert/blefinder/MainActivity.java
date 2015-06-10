@@ -8,7 +8,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -109,6 +111,16 @@ public class MainActivity extends AppCompatActivity {
                 BeaconListAdapter adapter = ((BeaconListAdapter) ((EmptyRecyclerView) findViewById(R.id.beaconList)).getAdapter());
                 adapter.set(bleDataTracker.getValidBeacons());
                 adapter.notifyDataSetChanged();
+
+                bleDataTracker.updateState();
+                FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_btn);
+                if(bleDataTracker.isTracking()) {
+                    floatingActionButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.bt_scan, null));
+                    ((TextView) findViewById(R.id.msgSubtitle)).setText("Start scanning to find beacons.");
+                } else {
+                    floatingActionButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.bluetooth, null));
+                    ((TextView) findViewById(R.id.msgSubtitle)).setText("No beacons found nearby.");
+                }
             }
 
             refreshHandler.postDelayed(refreshRunner, 1000);

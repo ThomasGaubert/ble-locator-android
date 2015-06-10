@@ -102,23 +102,6 @@ public class BLEDataTracker implements BeaconConsumer {
             public void didRangeBeaconsInRegion(final Collection<Beacon> beacons, Region region) {
                 HashMap<String, SeenBeacon> seenBeacons = BeaconIO.getSeenBeacons();
                 validBeacons.clear();
-                /* REMOVE
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (Beacon b : beacons) {
-                            SeenBeacon seenBeacon = BeaconIO.getSeenBeacon(b.getBluetoothAddress());
-                            if (seenBeacon == null || seenBeacon.isIgnore())
-                                beacons.remove(b);
-                        }
-
-                        if(mainActivity != null) {
-                            EmptyRecyclerView recyclerView = (EmptyRecyclerView) mainActivity.findViewById(R.id.beaconList);
-                            ((BeaconListAdapter) recyclerView.getAdapter()).set(visibleBeacons);
-                        }
-                    }
-                }); */
 
                 for (Beacon b : beacons) {
                     if (seenBeacons.containsKey(b.getBluetoothAddress())) {
@@ -177,6 +160,10 @@ public class BLEDataTracker implements BeaconConsumer {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+    public void updateState() {
+        isTracking = beaconManager.getRangedRegions().size() != 0;
     }
 
     @Override
