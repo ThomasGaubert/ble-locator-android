@@ -41,7 +41,7 @@ public class HSVColorPickerDialog extends AlertDialog {
         this.selectedColor = initialColor;
         this.listener = listener;
 
-        colorWheel = new HSVColorWheel(context);
+        HSVColorWheel colorWheel = new HSVColorWheel(context);
         valueSlider = new HSVValueSlider(context);
         int padding = (int) (context.getResources().getDisplayMetrics().density * PADDING_DP);
         int borderSize = (int) (context.getResources().getDisplayMetrics().density * BORDER_DP);
@@ -113,7 +113,6 @@ public class HSVColorPickerDialog extends AlertDialog {
         }
     };
 
-    private HSVColorWheel colorWheel;
     private HSVValueSlider valueSlider;
 
     private View selectedColorView;

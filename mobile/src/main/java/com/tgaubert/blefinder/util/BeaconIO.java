@@ -107,7 +107,4 @@ public class BeaconIO {
         return seenBeacons.get(key);
     }
 
-    public static SeenBeacon putSeenBeacon(String key, SeenBeacon value) {
-        return seenBeacons.put(key, value);
-    }
 }

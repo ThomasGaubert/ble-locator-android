@@ -31,7 +31,8 @@
                 android:id="@+id/colorTag"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:padding="2dp" />
+                android:padding="2dp"
+                android:contentDescription="@string/adapter_beacon_color"/>
 
         </RelativeLayout>
 

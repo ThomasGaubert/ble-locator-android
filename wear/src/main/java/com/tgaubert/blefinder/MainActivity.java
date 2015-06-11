@@ -26,8 +26,6 @@ public class MainActivity extends Activity implements WearableListView.ClickList
     private WearableListView mListView;
     private ListAdapter mAdapter;
 
-    private static ArrayList<ListItem> items;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,12 +65,10 @@ public class MainActivity extends Activity implements WearableListView.ClickList
 
     private class ListAdapter extends WearableListView.Adapter {
 
-        private final Context context;
         private final List<ListItem> items;
         private final LayoutInflater mInflater;
 
         public ListAdapter(Context context, List<ListItem> items) {
-            this.context = context;
             this.items = items;
             mInflater = LayoutInflater.from(context);
         }
@@ -102,7 +98,7 @@ public class MainActivity extends Activity implements WearableListView.ClickList
     }
 
     private void initListView() {
-        items = new ArrayList<>();
+        ArrayList<ListItem> items = new ArrayList<>();
         if (BeaconManager.getInstanceForApplication(getApplicationContext()).getRangedRegions().size() > 0)
             items.add(new ListItem(R.mipmap.ic_launcher, getString(R.string.activity_main_stop_scan)));
         else

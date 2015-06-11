@@ -45,6 +45,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="@string/dialog_notify_units"
+            android:labelFor="@id/notifyDistance"
             android:id="@+id/notifyUnits" />
 
     </LinearLayout>

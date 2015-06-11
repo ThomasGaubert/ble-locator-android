@@ -11,8 +11,8 @@ import com.tgaubert.blefinder.R;
 
 public final class ItemView extends LinearLayout implements WearableListView.OnCenterProximityListener {
 
-    CircledImageView image;
-    TextView text;
+    private CircledImageView image;
+    private TextView text;
 
     public ItemView(Context context) {
         super(context, null);

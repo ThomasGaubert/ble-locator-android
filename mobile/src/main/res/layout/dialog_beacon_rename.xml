@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -17,12 +18,15 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/dialog_rename_title"
-            android:id="@+id/dialogTitle" />
+            android:id="@+id/dialogTitle"
+            android:labelFor="@id/dialogEditText"/>
 
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/dialogEditText" />
+            android:inputType="text"
+            android:id="@+id/dialogEditText"
+            tools:ignore="TextFields" />
 
     </LinearLayout>
 

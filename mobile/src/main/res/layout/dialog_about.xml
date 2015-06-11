@@ -9,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/launcherIcon"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@mipmap/ic_launcher"
+        android:contentDescription="@string/app_name"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,7 +20,7 @@
         android:id="@+id/appName"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/launcherIcon"
-        android:layout_marginLeft="16dp" />
+        android:layout_marginStart="16dp" />
 
     <TextView
         android:layout_width="wrap_content"
