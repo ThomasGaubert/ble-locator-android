@@ -69,7 +69,9 @@ public class BLEDataTracker implements BeaconConsumer {
             // resuming from background.
             beaconManager.getBeaconParsers().add(new BeaconParser().
                     setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
-        } catch(UnsupportedOperationException e) { e.printStackTrace(); }
+        } catch (UnsupportedOperationException e) {
+            e.printStackTrace();
+        }
         beaconManager.bind(this);
     }
 
@@ -120,20 +122,20 @@ public class BLEDataTracker implements BeaconConsumer {
 
                         SeenBeacon seenBeacon = seenBeacons.get(b.getBluetoothAddress());
 
-                        if(!seenBeacon.isIgnore() && Double.parseDouble(seenBeacon.getDistance()) >= b.getDistance()) {
+                        if (!seenBeacon.isIgnore() && Double.parseDouble(seenBeacon.getDistance()) >= b.getDistance()) {
                             beaconCount++;
                             String savedName = seenBeacon.getUserName();
-                            if(savedName.contains("BLEFinder\u2063"))
+                            if (savedName.contains("BLEFinder\u2063"))
                                 savedName = b.getBluetoothName();
 
-                            if(beaconCount == 1) {
+                            if (beaconCount == 1) {
                                 builder.setContentText(savedName + context.getString(R.string.notif_text_single)
                                         + seenBeacon.getDistance()
                                         + context.getString(R.string.notif_text_unit_short) + ".");
                             } else {
                                 inboxStyle.setBigContentTitle(beaconCount + context.getString(R.string.notif_text_multiple));
-                                if(beaconCount < 6) {
-                                    if(beaconCount == 2) {
+                                if (beaconCount < 6) {
+                                    if (beaconCount == 2) {
                                         inboxStyle.addLine(builder.mContentText.toString()
                                                 .replace(context.getString(R.string.notif_text_single), "   ")
                                                 .replace(".", ""));
@@ -154,7 +156,7 @@ public class BLEDataTracker implements BeaconConsumer {
                     }
                 }
 
-                if(beaconCount == 0) {
+                if (beaconCount == 0) {
                     notifyMgr.cancel(1);
                 } else {
                     notifyMgr.notify(NOTIFICATION_ID, builder.build());

@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical" android:layout_width="fill_parent"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginLeft="24dp"
@@ -16,7 +18,7 @@
             android:text="@string/dialog_licenses_title"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:id="@+id/dialogTitle"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24dp" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -33,7 +35,8 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical" android:layout_width="fill_parent"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp">
 

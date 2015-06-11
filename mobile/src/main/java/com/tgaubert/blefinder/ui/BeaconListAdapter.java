@@ -135,7 +135,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                     HSVColorPickerDialog cpd = new HSVColorPickerDialog(view.getContext(), 0xFF4488CC, new HSVColorPickerDialog.OnColorSelectedListener() {
                                         @Override
                                         public void colorSelected(Integer color) {
-                                            if(color == -1)
+                                            if (color == -1)
                                                 color = 0;
                                             BeaconIO.getSeenBeacon(b.getBluetoothAddress()).setColor(color);
                                         }
@@ -154,7 +154,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
 
                                     final EditText distEditText = ((EditText) notifyDialog.findViewById(R.id.notifyDistance));
                                     String distance = BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getDistance();
-                                    if(Integer.parseInt(distance) != 0)
+                                    if (Integer.parseInt(distance) != 0)
                                         distEditText.setText(distance);
                                     distEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                                         @Override
@@ -177,7 +177,7 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                         @Override
                                         public void onClick(View v) {
                                             String distance = distEditText.getText().toString();
-                                            if(distance.trim().equals(""))
+                                            if (distance.trim().equals(""))
                                                 distance = "0";
                                             BeaconIO.getSeenBeacon(b.getBluetoothAddress()).setDistance(distance);
                                             notifyDialog.dismiss();
@@ -234,13 +234,13 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
             holder.rowTitle.setText(BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName());
         holder.rowSubtitle.setText(b.getDistance() + " " + context.getString(R.string.adapter_card_text_units_away));
 
-        if(Build.VERSION.SDK_INT < 21)
+        if (Build.VERSION.SDK_INT < 21)
             //noinspection deprecation
             colorTag = (GradientDrawable) context.getResources().getDrawable(R.drawable.circle);
         else
             colorTag = (GradientDrawable) context.getResources().getDrawable(R.drawable.circle, context.getTheme());
 
-        if(colorTag != null)
+        if (colorTag != null)
             colorTag.setColor(BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getColor());
         holder.rowColor.setImageDrawable(colorTag);
     }

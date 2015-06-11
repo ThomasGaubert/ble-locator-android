@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         bleDataTracker = new BLEDataTracker(getApplicationContext());
         notifyMgr = (NotificationManager) getSystemService(Service.NOTIFICATION_SERVICE);
-        if(!bleDataTracker.isTracking())
+        if (!bleDataTracker.isTracking())
             notifyMgr.cancel(1);
 
         setContentView(R.layout.activity_main);
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_reset) {
+        if (id == R.id.action_reset) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.activity_main_reset_title);
             builder.setMessage(R.string.activity_main_reset_text);
@@ -100,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            if(pInfo != null)
-                ((TextView)dialog.findViewById(R.id.appVersion)).setText(pInfo.versionName);
+            if (pInfo != null)
+                ((TextView) dialog.findViewById(R.id.appVersion)).setText(pInfo.versionName);
 
             dialog.findViewById(R.id.dialogLicenses).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -168,14 +168,14 @@ public class MainActivity extends AppCompatActivity {
 
     private final Runnable refreshRunner = new Runnable() {
         public void run() {
-            if(bleDataTracker != null && bleDataTracker.isTracking()) {
+            if (bleDataTracker != null && bleDataTracker.isTracking()) {
                 BeaconListAdapter adapter = ((BeaconListAdapter) ((EmptyRecyclerView) findViewById(R.id.beaconList)).getAdapter());
                 adapter.set(bleDataTracker.getValidBeacons());
                 adapter.notifyDataSetChanged();
 
                 bleDataTracker.updateState();
                 FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_btn);
-                if(bleDataTracker.isTracking()) {
+                if (bleDataTracker.isTracking()) {
                     floatingActionButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.bt_scan, null));
                     ((TextView) findViewById(R.id.msgSubtitle)).setText(R.string.fragment_main_no_beacons_nearby);
                 } else {

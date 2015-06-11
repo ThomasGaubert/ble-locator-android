@@ -73,7 +73,9 @@ public class BLEDataTracker implements BeaconConsumer {
             // resuming from background.
             beaconManager.getBeaconParsers().add(new BeaconParser().
                     setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
-        } catch(UnsupportedOperationException e) { e.printStackTrace(); }
+        } catch (UnsupportedOperationException e) {
+            e.printStackTrace();
+        }
         beaconManager.bind(this);
     }
 
@@ -124,7 +126,7 @@ public class BLEDataTracker implements BeaconConsumer {
 
                         SeenBeacon seenBeacon = seenBeacons.get(b.getBluetoothAddress());
 
-                        if(!seenBeacon.isIgnore()) {
+                        if (!seenBeacon.isIgnore()) {
                             beaconCount++;
                         }
                     } else {
@@ -133,7 +135,7 @@ public class BLEDataTracker implements BeaconConsumer {
                         beaconCount++;
                     }
 
-                    if(beaconCount == 0) {
+                    if (beaconCount == 0) {
                         builder.setContentText(context.getString(R.string.notif_text_none_nearby));
                     } else {
                         builder.setContentText(beaconCount + context.getString(R.string.notif_text_nearby));

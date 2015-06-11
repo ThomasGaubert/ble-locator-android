@@ -15,7 +15,7 @@ public class StopScanningReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        ((NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE)) .cancel(1);
+        ((NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE)).cancel(1);
         context.stopService(new Intent(context, BeaconService.class));
         BeaconManager beaconManager = BeaconManager.getInstanceForApplication(context.getApplicationContext());
         if (beaconManager.getRangedRegions().size() > 0) {

@@ -37,7 +37,7 @@ public class MainActivityFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(((MainActivity) getActivity()).getBleDataTracker().isTracking()) {
+                if (((MainActivity) getActivity()).getBleDataTracker().isTracking()) {
                     Snackbar.make(v, R.string.fragment_main_done, Snackbar.LENGTH_LONG).show();
                     floatingActionButton.setImageDrawable(idleDrawable);
                     ((TextView) rootView.findViewById(R.id.msgSubtitle)).setText(R.string.fragment_main_no_beacons);

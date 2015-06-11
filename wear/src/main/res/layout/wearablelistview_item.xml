@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.tgaubert.blefinder.ui.ItemView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.tgaubert.blefinder.ui.ItemView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_vertical"
     android:layout_width="match_parent"
@@ -14,7 +13,7 @@
         android:layout_width="52dp"
         app:circle_border_color="#FFFFFFFF"
         app:circle_border_width="2dp"
-        app:circle_color="#00000000"/>
+        app:circle_color="#00000000" />
 
     <TextView
         android:id="@+id/text"
@@ -26,5 +25,5 @@
         android:layout_marginRight="16dp"
         android:layout_width="fill_parent"
         android:textColor="@color/white"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 </com.tgaubert.blefinder.ui.ItemView>

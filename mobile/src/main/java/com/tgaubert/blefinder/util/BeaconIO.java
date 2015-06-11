@@ -52,7 +52,7 @@ public class BeaconIO {
                     } finally {
                         try {
                             assert stream != null;
-                                stream.close();
+                            stream.close();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -78,7 +78,7 @@ public class BeaconIO {
                 JSONObject beacons = new JSONObject();
 
                 try {
-                    for(Map.Entry<String, SeenBeacon> entry : seenBeacons.entrySet()) {
+                    for (Map.Entry<String, SeenBeacon> entry : seenBeacons.entrySet()) {
                         beacons.put(entry.getKey(), entry.getValue().getJsonObject());
                     }
 

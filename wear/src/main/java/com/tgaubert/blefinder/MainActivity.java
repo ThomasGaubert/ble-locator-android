@@ -48,7 +48,7 @@ public class MainActivity extends Activity implements WearableListView.ClickList
     public void onClick(WearableListView.ViewHolder viewHolder) {
         switch (viewHolder.getLayoutPosition()) {
             case 0:
-                if(BeaconManager.getInstanceForApplication(getApplicationContext()).getRangedRegions().size() > 0) {
+                if (BeaconManager.getInstanceForApplication(getApplicationContext()).getRangedRegions().size() > 0) {
                     bleDataTracker.setTracking(false);
                     Toast.makeText(this, R.string.activity_main_stopping, Toast.LENGTH_SHORT).show();
                 } else {
@@ -103,7 +103,7 @@ public class MainActivity extends Activity implements WearableListView.ClickList
 
     private void initListView() {
         items = new ArrayList<>();
-        if(BeaconManager.getInstanceForApplication(getApplicationContext()).getRangedRegions().size() > 0)
+        if (BeaconManager.getInstanceForApplication(getApplicationContext()).getRangedRegions().size() > 0)
             items.add(new ListItem(R.mipmap.ic_launcher, getString(R.string.activity_main_stop_scan)));
         else
             items.add(new ListItem(R.mipmap.ic_launcher, getString(R.string.activity_main_start_scan)));
