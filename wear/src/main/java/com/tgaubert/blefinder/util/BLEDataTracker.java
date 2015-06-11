@@ -38,7 +38,6 @@ public class BLEDataTracker implements BeaconConsumer {
     private NotificationManager notifyMgr;
 
     private NotificationCompat.Builder builder;
-    private NotificationCompat.InboxStyle inboxStyle;
     private final int NOTIFICATION_ID = 1;
     private int beaconCount = 0;
 
@@ -58,10 +57,9 @@ public class BLEDataTracker implements BeaconConsumer {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setColor(context.getResources().getColor(R.color.primary))
                 .setGroup("BLE_FINDER_ALERT")
-                .setContentTitle("Scanning...")
+                .setContentTitle(context.getString(R.string.notif_title))
                 .extend(new NotificationCompat.WearableExtender().setBackground(bg))
-                .addAction(new NotificationCompat.Action(R.drawable.stop, "Stop Scanning", stopPendingIntent));
-        inboxStyle = new NotificationCompat.InboxStyle();
+                .addAction(new NotificationCompat.Action(R.drawable.stop, context.getString(R.string.notif_action), stopPendingIntent));
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setAction(Intent.ACTION_MAIN);
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -128,11 +126,6 @@ public class BLEDataTracker implements BeaconConsumer {
 
                         if(!seenBeacon.isIgnore()) {
                             beaconCount++;
-                            /*
-                            String savedName = seenBeacon.getUserName();
-                            if(savedName.contains("BLEFinder\u2063"))
-                                savedName = b.getBluetoothName();
-                            */
                         }
                     } else {
                         Log.i(TAG, "Just saw beacon " + b.getBluetoothAddress() + " for the first time.");
@@ -141,9 +134,9 @@ public class BLEDataTracker implements BeaconConsumer {
                     }
 
                     if(beaconCount == 0) {
-                        builder.setContentText("No nearby beacons");
+                        builder.setContentText(context.getString(R.string.notif_text_none_nearby));
                     } else {
-                        builder.setContentText(beaconCount + " beacons nearby");
+                        builder.setContentText(beaconCount + context.getString(R.string.notif_text_nearby));
                     }
                 }
 

@@ -38,14 +38,14 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(((MainActivity) getActivity()).getBleDataTracker().isTracking()) {
-                    Snackbar.make(v, "Done searching for beacons.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v, R.string.fragment_main_done, Snackbar.LENGTH_LONG).show();
                     floatingActionButton.setImageDrawable(idleDrawable);
-                    ((TextView) rootView.findViewById(R.id.msgSubtitle)).setText("Start scanning to find beacons.");
+                    ((TextView) rootView.findViewById(R.id.msgSubtitle)).setText(R.string.fragment_main_no_beacons);
                     ((MainActivity) getActivity()).getBleDataTracker().setTracking(false);
                 } else {
-                    Snackbar.make(v, "Searching for beacons...", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(v, R.string.fragment_main_scanning, Snackbar.LENGTH_LONG).show();
                     floatingActionButton.setImageDrawable(scanningDrawable);
-                    ((TextView) rootView.findViewById(R.id.msgSubtitle)).setText("No beacons found nearby.");
+                    ((TextView) rootView.findViewById(R.id.msgSubtitle)).setText(R.string.fragment_main_no_beacons_nearby);
                     ((MainActivity) getActivity()).getBleDataTracker().setTracking(true);
                 }
             }

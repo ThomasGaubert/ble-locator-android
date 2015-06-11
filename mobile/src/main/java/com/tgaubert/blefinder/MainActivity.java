@@ -71,16 +71,16 @@ public class MainActivity extends AppCompatActivity {
 
         if(id == R.id.action_reset) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Reset Beacons");
-            builder.setMessage("Are you sure you want to reset beacon data?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            builder.setTitle(R.string.activity_main_reset_title);
+            builder.setMessage(R.string.activity_main_reset_text);
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     BeaconIO.getSeenBeacons().clear();
-                    Snackbar.make(findViewById(R.id.floating_btn), "Beacon data reset.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(findViewById(R.id.floating_btn), R.string.activity_main_reset_done, Snackbar.LENGTH_LONG).show();
                 }
             });
-            builder.setNegativeButton("No", null);
+            builder.setNegativeButton(R.string.no, null);
             builder.show();
         }
 
@@ -177,10 +177,10 @@ public class MainActivity extends AppCompatActivity {
                 FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.floating_btn);
                 if(bleDataTracker.isTracking()) {
                     floatingActionButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.bt_scan, null));
-                    ((TextView) findViewById(R.id.msgSubtitle)).setText("No beacons found nearby.");
+                    ((TextView) findViewById(R.id.msgSubtitle)).setText(R.string.fragment_main_no_beacons_nearby);
                 } else {
                     floatingActionButton.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.bluetooth, null));
-                    ((TextView) findViewById(R.id.msgSubtitle)).setText("Start scanning to find beacons.");
+                    ((TextView) findViewById(R.id.msgSubtitle)).setText(R.string.fragment_main_start_scan);
                 }
             }
 

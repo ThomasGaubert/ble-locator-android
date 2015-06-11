@@ -32,7 +32,7 @@
             android:id="@+id/dialogOk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OK"
+            android:text="@string/ok"
             android:background="?android:attr/selectableItemBackground"
             android:textSize="14sp"
             android:textColor="?colorPrimary"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/info" android:title="Info" android:icon="@drawable/information"/>
-    <item android:id="@+id/rename" android:title="Rename" android:icon="@drawable/rename"/>
-    <item android:id="@+id/color" android:title="Color" android:icon="@drawable/color"/>
-    <item android:id="@+id/notify" android:title="Notify" android:icon="@drawable/notify"/>
-    <item android:id="@+id/ignore" android:title="Ignore" android:icon="@drawable/ignore"/>
+    <item android:id="@+id/info" android:title="@string/adapter_beacon_info" android:icon="@drawable/information"/>
+    <item android:id="@+id/rename" android:title="@string/adapter_beacon_rename" android:icon="@drawable/rename"/>
+    <item android:id="@+id/color" android:title="@string/adapter_beacon_color" android:icon="@drawable/color"/>
+    <item android:id="@+id/notify" android:title="@string/adapter_beacon_notify" android:icon="@drawable/notify"/>
+    <item android:id="@+id/ignore" android:title="@string/adapter_beacon_ignore" android:icon="@drawable/ignore"/>
 </menu>

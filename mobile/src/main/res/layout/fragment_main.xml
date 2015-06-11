@@ -21,14 +21,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="No Beacons"
+            android:text="@string/fragment_main_no_beacons"
             android:id="@+id/msgTitle"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Start scanning to find beacons."
+            android:text="@string/fragment_main_start_scan"
             android:id="@+id/msgSubtitle" />
 
     </LinearLayout>

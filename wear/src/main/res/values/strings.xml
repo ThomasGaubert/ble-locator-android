@@ -1,5 +1,16 @@
 <resources>
+    <!-- Global Strings -->
     <string name="app_name">BLE Finder</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
+
+    <!-- MainActivity -->
+    <string name="activity_main_stop_scan">Stop Scan</string>
+    <string name="activity_main_start_scan">Start Scan</string>
+    <string name="activity_main_stopping">Stopping scanning…</string>
+    <string name="activity_main_starting">Scanning…</string>
+
+    <!-- Notification -->
+    <string name="notif_title">Scanning…</string>
+    <string name="notif_action">Stop Scanning</string>
+    <string name="notif_text_none_nearby">No nearby beacon</string>
+    <string name="notif_text_nearby"> beacons nearby</string>
 </resources>

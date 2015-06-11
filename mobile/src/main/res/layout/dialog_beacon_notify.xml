@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/dialogTitle"
-        android:text="Beacon Alert"
+        android:text="@string/dialog_notify_title"
         android:layout_marginRight="24dp"
         android:layout_marginLeft="24dp" />
 
@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Get notified if this beacon is within a distance."
+        android:text="@string/dialog_notify_subtitle"
         android:id="@+id/dialogSubtitle"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/dialogTitle"
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="meters"
+            android:text="@string/dialog_notify_units"
             android:id="@+id/notifyUnits" />
 
     </LinearLayout>
@@ -62,7 +62,7 @@
             android:id="@+id/dialogCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:background="?android:attr/selectableItemBackground"
             android:textSize="14sp"
             android:textColor="?colorPrimary" />
@@ -71,7 +71,7 @@
             android:id="@+id/dialogOk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OK"
+            android:text="@string/ok"
             android:background="?android:attr/selectableItemBackground"
             android:textSize="14sp"
             android:textColor="?colorPrimary" />

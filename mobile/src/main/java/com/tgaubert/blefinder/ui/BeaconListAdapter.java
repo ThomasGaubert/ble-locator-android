@@ -140,8 +140,8 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                             BeaconIO.getSeenBeacon(b.getBluetoothAddress()).setColor(color);
                                         }
                                     });
-                                    cpd.setTitle("Pick a color");
-                                    cpd.setNoColorButton(R.string.action_none);
+                                    cpd.setTitle(R.string.adapter_color_picker_title);
+                                    cpd.setNoColorButton(R.string.none);
                                     cpd.show();
                                     break;
                                 case R.id.notify:
@@ -188,16 +188,18 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
                                     break;
                                 case R.id.ignore:
                                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                                    builder.setTitle("Ignore Beacon");
-                                    builder.setMessage("Are you sure you want to ignore this beacon?");
-                                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    builder.setTitle(R.string.adapter_ignore_title);
+                                    builder.setMessage(R.string.adapter_ignore_text);
+                                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             BeaconIO.getSeenBeacons().get(b.getBluetoothAddress()).setIgnore(true);
-                                            Snackbar.make(view.getRootView().findViewById(R.id.floating_btn), "Ignoring " + b.getBluetoothName() + ".", Snackbar.LENGTH_LONG).show();
+                                            Snackbar.make(view.getRootView().findViewById(R.id.floating_btn),
+                                                    view.getContext().getString(R.string.adapter_ignore_verb)
+                                                            + b.getBluetoothName() + ".", Snackbar.LENGTH_LONG).show();
                                         }
                                     });
-                                    builder.setNegativeButton("No", null);
+                                    builder.setNegativeButton(R.string.no, null);
                                     builder.show();
                                     break;
                             }
@@ -222,15 +224,15 @@ public class BeaconListAdapter extends RecyclerView.Adapter<BeaconListAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        Context context = holder.view.getContext();
+        GradientDrawable colorTag;
+
         Beacon b = beacons.get(position);
         if (BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName().contains("BLEFinder\u2063"))
             holder.rowTitle.setText(b.getBluetoothName());
         else
             holder.rowTitle.setText(BeaconIO.getSeenBeacon(b.getBluetoothAddress()).getUserName());
-        holder.rowSubtitle.setText(b.getDistance() + " meters away");
-
-        Context context = holder.view.getContext();
-        GradientDrawable colorTag;
+        holder.rowSubtitle.setText(b.getDistance() + " " + context.getString(R.string.adapter_card_text_units_away));
 
         if(Build.VERSION.SDK_INT < 21)
             //noinspection deprecation

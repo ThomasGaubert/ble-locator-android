@@ -53,8 +53,8 @@ public class BLEDataTracker implements BeaconConsumer {
                 .setColor(context.getResources().getColor(R.color.primary))
                 .setGroup("BLE_FINDER_ALERT")
                 .setOngoing(true)
-                .setContentTitle("Beacon Alert")
-                .addAction(new NotificationCompat.Action(R.drawable.stop, "Stop Scanning", stopPendingIntent));
+                .setContentTitle(context.getString(R.string.notif_title))
+                .addAction(new NotificationCompat.Action(R.drawable.stop, context.getString(R.string.notif_action), stopPendingIntent));
         inboxStyle = new NotificationCompat.InboxStyle();
         Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setAction(Intent.ACTION_MAIN);
@@ -127,18 +127,24 @@ public class BLEDataTracker implements BeaconConsumer {
                                 savedName = b.getBluetoothName();
 
                             if(beaconCount == 1) {
-                                builder.setContentText(savedName + " is within " + seenBeacon.getDistance() + "m.");
+                                builder.setContentText(savedName + context.getString(R.string.notif_text_single)
+                                        + seenBeacon.getDistance()
+                                        + context.getString(R.string.notif_text_unit_short) + ".");
                             } else {
-                                inboxStyle.setBigContentTitle(beaconCount + " beacons nearby");
+                                inboxStyle.setBigContentTitle(beaconCount + context.getString(R.string.notif_text_multiple));
                                 if(beaconCount < 6) {
                                     if(beaconCount == 2) {
-                                        inboxStyle.addLine(builder.mContentText.toString().replace(" is within ", "   ").replace(".", ""));
+                                        inboxStyle.addLine(builder.mContentText.toString()
+                                                .replace(context.getString(R.string.notif_text_single), "   ")
+                                                .replace(".", ""));
                                     }
-                                    inboxStyle.addLine(savedName + "   " + seenBeacon.getDistance() + "m");
+                                    inboxStyle.addLine(savedName + "   " + seenBeacon.getDistance()
+                                            + context.getString(R.string.notif_text_unit_short));
                                 } else {
-                                    inboxStyle.setSummaryText("+" + (beaconCount - 5) + " more");
+                                    inboxStyle.setSummaryText("+" + (beaconCount - 5)
+                                            + context.getString(R.string.notif_text_more));
                                 }
-                                builder.setContentText(beaconCount + " beacons nearby");
+                                builder.setContentText(beaconCount + context.getString(R.string.notif_text_multiple));
                                 builder.setStyle(inboxStyle);
                             }
                         }
