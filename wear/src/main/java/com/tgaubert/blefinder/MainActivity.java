@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tgaubert.blefinder.ui.ItemView;
+import com.tgaubert.blefinder.ui.ListItem;
+import com.tgaubert.blefinder.util.BLEDataTracker;
+
 import org.altbeacon.beacon.BeaconManager;
 
 import java.util.ArrayList;

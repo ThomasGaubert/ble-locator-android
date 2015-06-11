@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".StopScanningReceiver"/>
+        <receiver android:name=".receiver.StopScanningReceiver"/>
     </application>
 
 </manifest>

@@ -21,6 +21,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.tgaubert.blefinder.ui.BeaconListAdapter;
+import com.tgaubert.blefinder.ui.EmptyRecyclerView;
+import com.tgaubert.blefinder.util.BLEDataTracker;
+import com.tgaubert.blefinder.util.BeaconIO;
+
 public class MainActivity extends AppCompatActivity {
 
     private BLEDataTracker bleDataTracker;

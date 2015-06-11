@@ -1,4 +1,4 @@
-package com.tgaubert.blefinder;
+package com.tgaubert.blefinder.ui;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

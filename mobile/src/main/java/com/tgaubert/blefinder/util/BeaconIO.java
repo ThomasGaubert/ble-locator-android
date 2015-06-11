@@ -1,6 +1,8 @@
-package com.tgaubert.blefinder;
+package com.tgaubert.blefinder.util;
 
 import android.content.Context;
+
+import com.tgaubert.blefinder.model.SeenBeacon;
 
 import org.json.JSONException;
 import org.json.JSONObject;

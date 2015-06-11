@@ -13,6 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.tgaubert.blefinder.ui.BeaconListAdapter;
+import com.tgaubert.blefinder.ui.EmptyRecyclerView;
+
 import org.altbeacon.beacon.Beacon;
 
 import java.util.ArrayList;

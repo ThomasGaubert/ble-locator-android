@@ -1,4 +1,4 @@
-package com.tgaubert.blefinder;
+package com.tgaubert.blefinder.model;
 
 
 import org.json.JSONException;

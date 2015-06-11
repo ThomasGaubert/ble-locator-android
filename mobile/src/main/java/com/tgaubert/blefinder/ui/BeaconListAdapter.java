@@ -1,4 +1,4 @@
-package com.tgaubert.blefinder;
+package com.tgaubert.blefinder.ui;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -18,6 +18,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cocosw.bottomsheet.BottomSheet;
+import com.tgaubert.blefinder.MainActivity;
+import com.tgaubert.blefinder.R;
+import com.tgaubert.blefinder.util.BeaconIO;
 
 import org.altbeacon.beacon.Beacon;
 

@@ -1,4 +1,4 @@
-package com.tgaubert.blefinder;
+package com.tgaubert.blefinder.ui;
 
 public class ListItem {
 

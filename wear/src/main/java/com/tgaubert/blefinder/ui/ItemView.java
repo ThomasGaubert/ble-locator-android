@@ -1,4 +1,4 @@
-package com.tgaubert.blefinder;
+package com.tgaubert.blefinder.ui;
 
 import android.content.Context;
 import android.support.wearable.view.CircledImageView;
@@ -6,6 +6,8 @@ import android.support.wearable.view.WearableListView;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.tgaubert.blefinder.R;
 
 public final class ItemView extends LinearLayout implements WearableListView.OnCenterProximityListener {
 

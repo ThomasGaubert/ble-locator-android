@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context=".MainActivityFragment">
 
-    <com.tgaubert.blefinder.EmptyRecyclerView
+    <com.tgaubert.blefinder.ui.EmptyRecyclerView
         android:id="@+id/beaconList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

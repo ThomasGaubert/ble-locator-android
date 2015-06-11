@@ -1,4 +1,4 @@
-package com.tgaubert.blefinder;
+package com.tgaubert.blefinder.receiver;
 
 import android.app.NotificationManager;
 import android.app.Service;
@@ -18,7 +18,7 @@ public class StopScanningReceiver extends BroadcastReceiver {
         ((NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE)) .cancel(1);
         context.stopService(new Intent(context, BeaconService.class));
         BeaconManager beaconManager = BeaconManager.getInstanceForApplication(context.getApplicationContext());
-        if (beaconManager.isAnyConsumerBound()) {
+        if (beaconManager.getRangedRegions().size() > 0) {
             try {
                 beaconManager.stopRangingBeaconsInRegion(new Region("BLEFinder", null, null, null));
             } catch (RemoteException e) {

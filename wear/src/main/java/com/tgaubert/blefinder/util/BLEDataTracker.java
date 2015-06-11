@@ -1,4 +1,4 @@
-package com.tgaubert.blefinder;
+package com.tgaubert.blefinder.util;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -6,9 +6,15 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.tgaubert.blefinder.MainActivity;
+import com.tgaubert.blefinder.R;
+import com.tgaubert.blefinder.model.SeenBeacon;
+import com.tgaubert.blefinder.receiver.StopScanningReceiver;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -40,6 +46,11 @@ public class BLEDataTracker implements BeaconConsumer {
         this.context = context;
         validBeacons = new ArrayList<>();
 
+        int bitmapWidth = 100;
+        int bitmapHeight = 100;
+        Bitmap bg = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+        bg.eraseColor(context.getResources().getColor(R.color.primary));
+
         Intent stopIntent = new Intent(context, StopScanningReceiver.class);
         PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 0, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         notifyMgr = (NotificationManager) context.getSystemService(Service.NOTIFICATION_SERVICE);
@@ -47,8 +58,8 @@ public class BLEDataTracker implements BeaconConsumer {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setColor(context.getResources().getColor(R.color.primary))
                 .setGroup("BLE_FINDER_ALERT")
-                .setOngoing(true)
-                .setContentTitle("Beacon Alert")
+                .setContentTitle("Scanning...")
+                .extend(new NotificationCompat.WearableExtender().setBackground(bg))
                 .addAction(new NotificationCompat.Action(R.drawable.stop, "Stop Scanning", stopPendingIntent));
         inboxStyle = new NotificationCompat.InboxStyle();
         Intent notificationIntent = new Intent(context, MainActivity.class);
@@ -115,39 +126,28 @@ public class BLEDataTracker implements BeaconConsumer {
 
                         SeenBeacon seenBeacon = seenBeacons.get(b.getBluetoothAddress());
 
-                        if(!seenBeacon.isIgnore() && Double.parseDouble(seenBeacon.getDistance()) >= b.getDistance()) {
+                        if(!seenBeacon.isIgnore()) {
                             beaconCount++;
+                            /*
                             String savedName = seenBeacon.getUserName();
                             if(savedName.contains("BLEFinder\u2063"))
                                 savedName = b.getBluetoothName();
-
-                            if(beaconCount == 1) {
-                                builder.setContentText(savedName + " is within " + seenBeacon.getDistance() + "m.");
-                            } else {
-                                inboxStyle.setBigContentTitle(beaconCount + " beacons nearby");
-                                if(beaconCount < 6) {
-                                    if(beaconCount == 2) {
-                                        inboxStyle.addLine(builder.mContentText.toString().replace(" is within ", "   ").replace(".", ""));
-                                    }
-                                    inboxStyle.addLine(savedName + "   " + seenBeacon.getDistance() + "m");
-                                } else {
-                                    inboxStyle.setSummaryText("+" + (beaconCount - 5) + " more");
-                                }
-                                builder.setContentText(beaconCount + " beacons nearby");
-                                builder.setStyle(inboxStyle);
-                            }
+                            */
                         }
                     } else {
                         Log.i(TAG, "Just saw beacon " + b.getBluetoothAddress() + " for the first time.");
                         BeaconIO.getSeenBeacons().put(b.getBluetoothAddress(), new SeenBeacon(b.getBluetoothAddress(), b.getBluetoothName()));
+                        beaconCount++;
+                    }
+
+                    if(beaconCount == 0) {
+                        builder.setContentText("No nearby beacons");
+                    } else {
+                        builder.setContentText(beaconCount + " beacons nearby");
                     }
                 }
 
-                if(beaconCount == 0) {
-                    notifyMgr.cancel(1);
-                } else {
-                    notifyMgr.notify(NOTIFICATION_ID, builder.build());
-                }
+                notifyMgr.notify(NOTIFICATION_ID, builder.build());
 
                 beaconCount = 0;
             }

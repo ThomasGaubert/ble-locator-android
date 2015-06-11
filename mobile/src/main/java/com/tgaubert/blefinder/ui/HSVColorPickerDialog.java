@@ -1,4 +1,4 @@
-package com.tgaubert.blefinder;
+package com.tgaubert.blefinder.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
