@@ -18,8 +18,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/dialog_rename_title"
-            android:id="@+id/dialogTitle"
-            android:labelFor="@id/dialogEditText"/>
+            android:id="@+id/dialogTitle" />
 
         <EditText
             android:layout_width="fill_parent"
